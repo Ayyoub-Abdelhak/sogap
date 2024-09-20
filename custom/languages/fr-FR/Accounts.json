@@ -1,0 +1,18 @@
+{
+    "php": {
+        "SINGLE_Accounts": "Client",
+        "Account Name": "Client",
+        "Accounts": "Clients",
+        "Account No": "N° de client",
+        "LBL_ACCOUNT_INFORMATION": "Détails du client",
+        "LBL_DUPLICATES_EXIST": "Le client existe déjà",
+        "LBL_SHOW_ACCOUNT_HIERARCHY": "Hierarchie des clients",
+        "LBL_ACCOUNTS_LIST_TREE_ALERT": "La liste des clients dépend du filtre et des produits sélectionnés.",
+        "LBL_DEACTIVATED_BY": "Client désactivé par"
+    },
+    "js": {
+        "JS_DUPLICTAE_CREATION_CONFIRMATION": "Le nom du client existe déjà. Voulez-vous créer un enregistrement en double ?",
+        "LBL_DELETE_CONFIRMATION": "La suppression de ce client supprimera ses opportunités et devis associés. Êtes-vous sûr de vouloir supprimer ce client??",
+        "LBL_MASS_DELETE_CONFIRMATION": "La suppression de ce (ces) client(s) supprimera ses opportunités et devis associés. Êtes-vous sûr de vouloir supprimer les enregistrements sélectionnés ?"
+    }
+}

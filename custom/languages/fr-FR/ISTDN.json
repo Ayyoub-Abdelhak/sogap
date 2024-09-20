@@ -1,0 +1,7 @@
+{
+    "php": {
+        "FL_ACCOUNT": "Client",
+        "ISTDN": "Sorties",
+        "SINGLE_ISTDN": "Sortie"
+    }
+}

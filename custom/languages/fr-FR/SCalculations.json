@@ -1,0 +1,16 @@
+{
+    "php": {
+        "SINGLE_SSalesProcesses": "Opportunité",
+        "LBL_CLOSED_TIME": "Heure de fin",
+        "LBL_NUMBER": "Nombre",
+        "FL_TOTAL_PRICE": "Total net",
+        "FL_MARGINP": "Marge brute en pourcentage",
+        "FL_MARGIN": "Marge totale",
+        "PLL_DRAFT": "Brouillon",
+        "PLL_IN_REALIZATION": "En réalisation",
+        "PLL_FOR_VERIFICATION": "En cours de vérification",
+        "PLL_CANCELLED": "Interrompu",
+        "PLL_COMPLETED": "Fini",
+        "LBL_CHANGE_STATUS": "Changer de statut"
+    }
+}

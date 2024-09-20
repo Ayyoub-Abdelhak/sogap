@@ -1,0 +1,17 @@
+{
+    "php": {
+        "SINGLE_Project": "Chantier",
+        "LBL_RECORDS_LIST": "Liste des chantiers",
+        "LBL_PROJECT_INFORMATION": "Détails du client",
+        "Project Name": "Nom du chantier",
+        "Project No": "N° de chantier",
+        "Project Url": "Chantier URL",
+        "LBL_PROJECTS_LIST": "Liste des chantiers",
+        "Add Project Task": "Ajouter une tâche chantier",
+        "LBL_GANTT_TITLE_ALL_PROJECTS": "Gantt - tous les chantiers",
+        "LBL_SHOW_HIERARCHY": "Hiérarchie du chantier"
+    },
+    "js": {
+        "JS_PROJECT_STATUSES": "Statuts du chantier"
+    }
+}

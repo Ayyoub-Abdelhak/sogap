@@ -1,0 +1,9 @@
+{
+	"php": {
+		"Formation": "Formation",
+		"SINGLE_Formation": "Formation",
+		"LBL_CUSTOM_INFORMATION": "Custom Information",
+		"LBL_BASIC_INFORMATION": "Basic Information",
+		"theme": "theme"
+	}
+}
