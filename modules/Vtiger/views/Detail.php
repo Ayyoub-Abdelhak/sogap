@@ -107,6 +107,29 @@ class Vtiger_Detail_View extends Vtiger_Index_View
 
 		$this->record->getWidgets();
 		$viewer = $this->getViewer($request);
+
+		if($moduleName == 'Conge'){
+			$soldeFN1 = (float)$recordModel->get('soldefinnmoins1');
+			$droitCp = (float)$recordModel->get('droit_cp_annee_encours');
+			$soldeInitial = $soldeFN1 + $droitCp;
+			$janvier = (float)$recordModel->get('janvier');
+			$fevrier = (float)$recordModel->get('fevrier');
+			$mars = (float)$recordModel->get('mars');
+			$avril = (float)$recordModel->get('avril');
+			$mai = (float)$recordModel->get('mai');
+			$juin = (float)$recordModel->get('juin');
+			$juillet = (float)$recordModel->get('juillet');
+			$aout = (float)$recordModel->get('aout');
+			$septembre = (float)$recordModel->get('septembre');
+			$octobre = (float)$recordModel->get('octobre');
+			$novembre = (float)$recordModel->get('novembre');
+			$decembre = (float)$recordModel->get('decembre');
+			$consomations = $janvier + $fevrier + $mars + $avril + $mai + $juin + $juillet + $aout + $septembre + $octobre + $novembre + $decembre;
+			$soldeCP = $soldeInitial - $consomations;
+			$recordModel->set('solde_initial', $soldeInitial);
+			$recordModel->set('consommations_cp_n', $consomations);
+			$recordModel->set('solde_cp_n', $soldeCP);
+		}
 		$viewer->assign('RECORD', $recordModel);
 		$moduleModel = $this->record->getModule();
 		$currentUserModel = Users_Record_Model::getCurrentUserModel();
