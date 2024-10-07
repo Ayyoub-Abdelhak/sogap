@@ -267,30 +267,6 @@ class Vtiger_List_View extends Vtiger_Index_View
 		if (!$this->listViewEntries) {
 			$this->listViewEntries = $this->listViewModel->getListViewEntries($pagingModel);
 		}
-		if($moduleName == 'Conge'){
-			foreach ($this->listViewEntries as $entry) {
-				$soldeFN1 = (float)$entry->get('soldefinnmoins1');
-				$droitCp = (float)$entry->get('droit_cp_annee_encours');
-				$soldeInitial = $soldeFN1 + $droitCp;
-				$janvier = (float)$entry->get('janvier');
-				$fevrier = (float)$entry->get('fevrier');
-				$mars = (float)$entry->get('mars');
-				$avril = (float)$entry->get('avril');
-				$mai = (float)$entry->get('mai');
-				$juin = (float)$entry->get('juin');
-				$juillet = (float)$entry->get('juillet');
-				$aout = (float)$entry->get('aout');
-				$septembre = (float)$entry->get('septembre');
-				$octobre = (float)$entry->get('octobre');
-				$novembre = (float)$entry->get('novembre');
-				$decembre = (float)$entry->get('decembre');
-				$consomations = $janvier + $fevrier + $mars + $avril + $mai + $juin + $juillet + $aout + $septembre + $octobre + $novembre + $decembre;
-				$soldeCP = $soldeInitial - $consomations;
-				$entry->set('solde_initial', $soldeInitial);
-				$entry->set('consommations_cp_n', $consomations);
-				$entry->set('solde_cp_n', $soldeCP);
-			}
-		}
 		$noOfEntries = \count($this->listViewEntries);
 		$viewer->assign('MODULE', $moduleName);
 		if (!$this->listViewLinks) {
