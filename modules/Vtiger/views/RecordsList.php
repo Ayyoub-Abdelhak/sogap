@@ -217,6 +217,14 @@ class Vtiger_RecordsList_View extends \App\Controller\Modal
 			$viewer->assign('SWITCH', true)
 				->assign('SWITCH_ON_TEXT', $this->switchLabel ? \App\Language::translate($this->switchLabel, $this->moduleName) : \App\Language::translateSingularModuleName($this->relatedParentModule));
 		}
+
+		$vendorId = $request->getInteger('vendorid');
+		if ($vendorId) {
+			$listViewEntries = array_filter($listViewEntries, function($entry) use ($vendorId) {
+				return $entry->get('vendor_id') == $vendorId;
+			});
+		}
+		
 		$viewer->assign('LISTVIEW_COUNT', (int) $totalCount);
 		$viewer->assign('PAGE_COUNT', $pagingModel->getPageCount());
 		$viewer->assign('PAGE_NUMBER', $pageNumber);
