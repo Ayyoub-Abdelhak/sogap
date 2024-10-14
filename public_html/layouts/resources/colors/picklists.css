@@ -82,18 +82,6 @@
 .picklistCT_OSSTimeControl_timecontrol_type_PLL_SICK_LEAVE { color: #9900FF !important; }
 .picklistCBg_OSSTimeControl_timecontrol_type_PLL_SICK_LEAVE { background: #9900FF !important; font-weight: 500 !important; color: white !important;}
 .picklistLb_OSSTimeControl_timecontrol_type_PLL_SICK_LEAVE { background: #9900FF !important; font-weight: 500 !important; color: white !important;  padding: 2px 7px 3px 7px;}
-.picklistCBr_OSSEmployees_employee_status_Recruiting { border-color: #1B5E20 !important; }
-.picklistCT_OSSEmployees_employee_status_Recruiting { color: #1B5E20 !important; }
-.picklistCBg_OSSEmployees_employee_status_Recruiting { background: #1B5E20 !important; font-weight: 500 !important; color: white !important;}
-.picklistLb_OSSEmployees_employee_status_Recruiting { background: #1B5E20 !important; font-weight: 500 !important; color: white !important;  padding: 2px 7px 3px 7px;}
-.picklistCBr_OSSEmployees_employee_status_Employee { border-color: #1B5E20 !important; }
-.picklistCT_OSSEmployees_employee_status_Employee { color: #1B5E20 !important; }
-.picklistCBg_OSSEmployees_employee_status_Employee { background: #1B5E20 !important; font-weight: 500 !important; color: white !important;}
-.picklistLb_OSSEmployees_employee_status_Employee { background: #1B5E20 !important; font-weight: 500 !important; color: white !important;  padding: 2px 7px 3px 7px;}
-.picklistCBr_OSSEmployees_employee_status_Inactive { border-color: #B71C1C !important; }
-.picklistCT_OSSEmployees_employee_status_Inactive { color: #B71C1C !important; }
-.picklistCBg_OSSEmployees_employee_status_Inactive { background: #B71C1C !important; font-weight: 500 !important; color: white !important;}
-.picklistLb_OSSEmployees_employee_status_Inactive { background: #B71C1C !important; font-weight: 500 !important; color: white !important;  padding: 2px 7px 3px 7px;}
 .picklistCBr_SQuotes_squotes_status_PLL_DRAFT { border-color: #90A4AE !important; }
 .picklistCT_SQuotes_squotes_status_PLL_DRAFT { color: #90A4AE !important; }
 .picklistCBg_SQuotes_squotes_status_PLL_DRAFT { background: #90A4AE !important; font-weight: 500 !important; color: black !important;}
@@ -150,3 +138,7 @@
 .picklistCT_SVendorEnquiries_svendorenquiries_status_Annulation { color: #F06292 !important; }
 .picklistCBg_SVendorEnquiries_svendorenquiries_status_Annulation { background: #F06292 !important; font-weight: 500 !important; color: black !important;}
 .picklistLb_SVendorEnquiries_svendorenquiries_status_Annulation { background: #F06292 !important; font-weight: 500 !important; color: black !important;  padding: 2px 7px 3px 7px;}
+.picklistCBr_SVendorEnquiries_svendorenquiries_status_Reservation { border-color: #1976D2 !important; }
+.picklistCT_SVendorEnquiries_svendorenquiries_status_Reservation { color: #1976D2 !important; }
+.picklistCBg_SVendorEnquiries_svendorenquiries_status_Reservation { background: #1976D2 !important; font-weight: 500 !important; color: white !important;}
+.picklistLb_SVendorEnquiries_svendorenquiries_status_Reservation { background: #1976D2 !important; font-weight: 500 !important; color: white !important;  padding: 2px 7px 3px 7px;}
