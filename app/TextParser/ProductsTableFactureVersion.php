@@ -75,6 +75,8 @@ class ProductsTableFactureVersion extends Base
             $counter = 0;
             foreach ($inventoryRows as $inventoryRow) {
                 ++$counter;
+                $displayType = $inventoryRow['picklist1'];
+                $displayStyle = $displayStyle == 'T' ? 'font-weight:bold;font-size:9px;' : $displayStyle == 'T' ? 'font-weight:bold;' : '';
                 $html .= '<tr class="row-' . $counter . '">';
                 foreach ($groupModels as $fieldModel) {
                     $columnName = $fieldModel->getColumnName();
@@ -88,8 +90,8 @@ class ProductsTableFactureVersion extends Base
                     } else {
                         $itemValue = $inventoryRow[$columnName];
                         if ('Name' === $typeName) {
-							$fieldStyle = $bodyStyle . 'text-align:left;width: 300px !important;';
-                            $fieldValue = $fieldModel->getDisplayValue($itemValue, $inventoryRow, true) === 'Produit non trouvé' ? '' : '<strong>' . $fieldModel->getDisplayValue($itemValue, $inventoryRow, true) . '</strong>';
+							$fieldStyle = $bodyStyle . 'text-align:left;width: 300px !important;' . $displayStyle;
+                            $fieldValue = $fieldModel->getDisplayValue($itemValue, $inventoryRow, true) === 'Produit non trouvé' ? '' : $fieldModel->getDisplayValue($itemValue, $inventoryRow, true);
                             $lines--;
                             foreach ($inventory->getFieldsByType('Comment') as $commentField) {
                                 if ($commentField->isVisible() && ($value = $inventoryRow[$commentField->getColumnName()]) && $comment = $commentField->getDisplayValue($value, $inventoryRow, true)) {
