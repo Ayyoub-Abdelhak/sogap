@@ -45,7 +45,7 @@ class ProductsTableDevisVersion extends Base
 			$currencySymbol = \App\Fields\Currency::getDefault()['currency_symbol'];
 		}
 		$headerStyle = 'font-size:9px;border:1px solid black;border-bottom:0px;padding:0px 4px;text-align:center;background-color:#D9E1F2;';
-		$bodyStyle = 'font-size:8px;border-left-color:#000000;border-left-style:solid;border-left-width:1px;border-right-color:#000000;border-right-style:solid;border-right-width:1px;padding:0px 4px;vertical-align: top;';
+		$bodyStyle = 'text-align:left;font-size:8px;border-left-color:#000000;border-left-style:solid;border-left-width:1px;border-right-color:#000000;border-right-style:solid;border-right-width:1px;padding:0px 4px;vertical-align: top;';
 		$html .= '<table class="products-table-long-version" style="width:100%;font-size:8px;border-collapse:collapse;">
 				<thead>
 					<tr>';
@@ -75,6 +75,17 @@ class ProductsTableDevisVersion extends Base
 			$counter = 0;
 			foreach ($inventoryRows as $inventoryRow) {
 				++$counter;
+
+                $displayType = $inventoryRow['picklist1'];
+                $displayStyle = '';
+                if ($displayType == 'T') {
+                    $displayStyle = 'font-weight:bold;font-size:8.5px;';
+                } elseif ($displayType == 'ST') {
+                    $displayStyle = 'font-weight:bold;';
+                } else {
+                    $displayStyle = 'font-weight:normal;';
+                }
+
 				$html .= '<tr class="row-' . $counter . '">';
 				foreach ($groupModels as $fieldModel) {
 					$columnName = $fieldModel->getColumnName();
@@ -88,8 +99,8 @@ class ProductsTableDevisVersion extends Base
 					} else {
 						$itemValue = $inventoryRow[$columnName];
 						if ('Name' === $typeName) {
-							$fieldStyle = $bodyStyle . 'text-align:left;width: 300px !important;';
-							$fieldValue = $fieldModel->getDisplayValue($itemValue, $inventoryRow, true) === 'Produit non trouvé' ? '' : '<strong>' . $fieldModel->getDisplayValue($itemValue, $inventoryRow, true) . '</strong>';
+							$fieldStyle = $bodyStyle . 'width: 300px !important;' . $displayStyle;
+							$fieldValue = $fieldModel->getDisplayValue($itemValue, $inventoryRow, true) === 'Produit non trouvé' ? '' : $fieldModel->getDisplayValue($itemValue, $inventoryRow, true);
 							$lines--;
 							foreach ($inventory->getFieldsByType('Comment') as $commentField) {
 								if ($commentField->isVisible() && ($value = $inventoryRow[$commentField->getColumnName()]) && $comment = $commentField->getDisplayValue($value, $inventoryRow, true)) {
@@ -99,7 +110,7 @@ class ProductsTableDevisVersion extends Base
 							}
 						} elseif (\in_array($typeName, ['GrossPrice', 'UnitPrice', 'TotalPrice']) && !empty($currencySymbol)) {
 							$fieldValue = \CurrencyField::appendCurrencySymbol($fieldModel->getDisplayValue($itemValue, $inventoryRow), $currencySymbol);
-							$fieldStyle = $bodyStyle . 'text-align:right;white-space: nowrap;';
+							$fieldStyle = $bodyStyle . 'white-space: nowrap;';
 						} else {
 							$fieldValue = $fieldModel->getDisplayValue($itemValue, $inventoryRow, true);
 						}

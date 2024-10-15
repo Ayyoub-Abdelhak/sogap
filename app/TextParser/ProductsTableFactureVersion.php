@@ -45,7 +45,7 @@ class ProductsTableFactureVersion extends Base
             $currencySymbol = \App\Fields\Currency::getDefault()['currency_symbol'];
         }
         $headerStyle = 'font-size:9px;border:1px solid black;border-bottom:0px;padding:0px 4px;text-align:center;background-color:#D9E1F2;';
-        $bodyStyle = 'font-size:8px;border-left-color:#000000;border-left-style:solid;border-left-width:1px;border-right-color:#000000;border-right-style:solid;border-right-width:1px;padding:0px 4px;vertical-align: top;';
+        $bodyStyle = 'text-align:left;font-size:8px;border-left-color:#000000;border-left-style:solid;border-left-width:1px;border-right-color:#000000;border-right-style:solid;border-right-width:1px;padding:0px 4px;vertical-align: top;';
         $html .= '<table class="products-table-long-version" style="width:100%;font-size:8px;border-collapse:collapse;">
 				<thead>
 					<tr>';
@@ -79,7 +79,7 @@ class ProductsTableFactureVersion extends Base
                 $displayType = $inventoryRow['picklist1'];
                 $displayStyle = '';
                 if ($displayType == 'T') {
-                    $displayStyle = 'font-weight:bold;font-size:9px;';
+                    $displayStyle = 'font-weight:bold;font-size:8.5px;';
                 } elseif ($displayType == 'ST') {
                     $displayStyle = 'font-weight:bold;';
                 } else {
@@ -99,7 +99,7 @@ class ProductsTableFactureVersion extends Base
                     } else {
                         $itemValue = $inventoryRow[$columnName];
                         if ('Name' === $typeName) {
-							$fieldStyle = $bodyStyle . 'text-align:left;width: 300px !important;' . $displayStyle;
+							$fieldStyle = $bodyStyle . 'width: 300px !important;' . $displayStyle;
                             $fieldValue = $fieldModel->getDisplayValue($itemValue, $inventoryRow, true) === 'Produit non trouvé' ? '' : $fieldModel->getDisplayValue($itemValue, $inventoryRow, true);
                             $lines--;
                             foreach ($inventory->getFieldsByType('Comment') as $commentField) {
@@ -110,7 +110,7 @@ class ProductsTableFactureVersion extends Base
                             }
                         } elseif (\in_array($typeName, ['GrossPrice', 'UnitPrice', 'TotalPrice']) && !empty($currencySymbol)) {
                             $fieldValue = \CurrencyField::appendCurrencySymbol($fieldModel->getDisplayValue($itemValue, $inventoryRow), $currencySymbol);
-                            $fieldStyle = $bodyStyle . 'text-align:right;white-space: nowrap;';
+                            $fieldStyle = $bodyStyle . 'twhite-space: nowrap;';
                         } else {
                             $fieldValue = $fieldModel->getDisplayValue($itemValue, $inventoryRow, true);
                         }
