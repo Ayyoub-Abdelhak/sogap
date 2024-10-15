@@ -75,8 +75,17 @@ class ProductsTableFactureVersion extends Base
             $counter = 0;
             foreach ($inventoryRows as $inventoryRow) {
                 ++$counter;
+
                 $displayType = $inventoryRow['picklist1'];
-                $displayStyle = ($displayStyle == 'T') ? 'font-weight:bold;font-size:9px;' : (($displayStyle == 'T') ? 'font-weight:bold;' : '');
+                $displayStyle = '';
+                if ($displayType == 'T') {
+                    $displayStyle = 'font-weight:bold;font-size:9px;';
+                } elseif ($displayType == 'ST') {
+                    $displayStyle = 'font-weight:bold;';
+                } else {
+                    $displayStyle = 'font-weight:normal;';
+                }
+
                 $html .= '<tr class="row-' . $counter . '">';
                 foreach ($groupModels as $fieldModel) {
                     $columnName = $fieldModel->getColumnName();
