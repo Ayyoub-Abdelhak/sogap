@@ -27,9 +27,9 @@ class Main
 	public static $HELPDESK_SUPPORT_EMAIL_REPLY = '';
 
 	/** Backslash is required at the end of URL */
-	// public static $site_URL = 'http://localhost/yetiforce/';
+	public static $site_URL = 'http://localhost:8888/yetiforce/';
 	// public static $site_URL = 'http://sogap.crm/';
-	public static $site_URL = 'http://192.168.1.245/';
+	// public static $site_URL = 'http://192.168.1.245/';
 
 	/** Cache directory path */
 	public static $cache_dir = 'cache/';

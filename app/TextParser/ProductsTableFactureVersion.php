@@ -45,7 +45,7 @@ class ProductsTableFactureVersion extends Base
             $currencySymbol = \App\Fields\Currency::getDefault()['currency_symbol'];
         }
         $headerStyle = 'font-size:9px;border:1px solid black;border-bottom:0px;padding:0px 4px;text-align:center;background-color:#D9E1F2;';
-        $bodyStyle = 'font-size:8px;border-left-color:#000000;border-left-style:solid;border-left-width:1px;border-right-color:#000000;border-right-style:solid;border-right-width:1px;padding:0px 4px;';
+        $bodyStyle = 'font-size:8px;border-left-color:#000000;border-left-style:solid;border-left-width:1px;border-right-color:#000000;border-right-style:solid;border-right-width:1px;padding:0px 4px;vertical-align: top;';
         $html .= '<table class="products-table-long-version" style="width:100%;font-size:8px;border-collapse:collapse;">
 				<thead>
 					<tr>';
@@ -60,7 +60,7 @@ class ProductsTableFactureVersion extends Base
                 if($typeName == 'Name') $headerName = 'Désignation';
 				if($typeName == 'Value') $headerName = 'Un.';
 				if($typeName == 'UnitPrice') $headerName = 'Prix U. HT';
-				if($typeName == 'TotalPrice') $headerName = 'Prix Totale HT';
+				if($typeName == 'TotalPrice') $headerName = 'Prix Total HT';
                 if (!$fieldModel->isVisible()) {
                     continue;
                 }
