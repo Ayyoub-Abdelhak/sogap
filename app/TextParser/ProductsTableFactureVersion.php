@@ -52,7 +52,35 @@ class ProductsTableFactureVersion extends Base
         $groupModels = [];
         $emptyTr = '<tr class="row">';
         $lines = 15;
-        foreach (['Name', 'Value', 'Quantity', 'UnitPrice', 'TotalPrice'] as $fieldType) {
+
+        $ht = 0;
+        $tax = 0;
+        $ttc = 0;
+        $discount = 0;
+        foreach (['TotalPrice', 'Tax', 'GrossPrice', 'Discount'] as $fieldType) {
+            foreach ($inventory->getFieldsByType($fieldType) as $fieldModel) {
+                foreach ($inventoryRows as $inventoryRow) {
+                    if ('TotalPrice' === $fieldModel->getType()) {
+                        $ht += $inventoryRow[$fieldModel->getColumnName()];
+                    }
+                    if ('Tax' === $fieldModel->getType()) {
+                        $tax += $inventoryRow[$fieldModel->getColumnName()];
+                    }
+                    if ('GrossPrice' === $fieldModel->getType()) {
+                        $ttc += $inventoryRow[$fieldModel->getColumnName()];
+                    }
+                    if ('Discount' === $fieldModel->getType()) {
+                        $discount += $inventoryRow[$fieldModel->getColumnName()];
+                    }
+                }
+            }
+        }
+
+        $fieldTypes = ['Name', 'Value', 'Quantity', 'UnitPrice', 'TotalPrice'];
+        if ($discount > 0) {
+            $fieldTypes[] = 'Discount';
+        }
+        foreach ($fieldTypes as $fieldType) {
             foreach ($inventory->getFieldsByType($fieldType) as $fieldModel) {
                 $columnName = $fieldModel->getColumnName();
                 $typeName = $fieldModel->getType();
@@ -100,6 +128,9 @@ class ProductsTableFactureVersion extends Base
                         $itemValue = $inventoryRow[$columnName];
                         if ('Name' === $typeName) {
 							$fieldStyle = $bodyStyle . 'width: 300px !important;' . $displayStyle;
+                            if ($discount > 0) {
+                                $fieldStyle = $bodyStyle . 'width: 250px !important;' . $displayStyle;
+                            }
                             $fieldValue = $fieldModel->getDisplayValue($itemValue, $inventoryRow, true) === 'Produit non trouvé' ? '' : $fieldModel->getDisplayValue($itemValue, $inventoryRow, true);
                             $lines--;
                             foreach ($inventory->getFieldsByType('Comment') as $commentField) {
@@ -108,7 +139,7 @@ class ProductsTableFactureVersion extends Base
                                     $lines--;
                                 }
                             }
-                        } elseif (\in_array($typeName, ['GrossPrice', 'UnitPrice', 'TotalPrice']) && !empty($currencySymbol)) {
+                        } elseif (\in_array($typeName, ['GrossPrice', 'UnitPrice', 'TotalPrice', 'Discount']) && !empty($currencySymbol)) {
                             $fieldValue = \CurrencyField::appendCurrencySymbol($fieldModel->getDisplayValue($itemValue, $inventoryRow), $currencySymbol);
 							$fieldStyle = $bodyStyle . 'text-align:left;white-space: nowrap;';
                         } else {
@@ -132,52 +163,45 @@ class ProductsTableFactureVersion extends Base
             }
             $html .= '</tr></tfoot></table>';
 
-            $ht = 0;
-            $tax = 0;
-            $ttc = 0;
-            foreach (['TotalPrice', 'Tax', 'GrossPrice'] as $fieldType) {
-                foreach ($inventory->getFieldsByType($fieldType) as $fieldModel) {
-                    foreach ($inventoryRows as $inventoryRow) {
-                        if ('TotalPrice' === $fieldModel->getType()) {
-                            $ht += $inventoryRow[$fieldModel->getColumnName()];
-                        }
-                        if ('Tax' === $fieldModel->getType()) {
-                            $tax += $inventoryRow[$fieldModel->getColumnName()];
-                        }
-                        if ('GrossPrice' === $fieldModel->getType()) {
-                            $ttc += $inventoryRow[$fieldModel->getColumnName()];
-                        }
-                    }
-                }
-            }
-
             $html .= '
-                <div style="padding: 0px 0px 0px 221px">
-                    <table style="width:100%;font-size:8px;margin-top:15px;border:1px solid black;font-weight:bold;">
-                        <tr>
-                            <td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;border-bottom-style:solid;border-bottom-width:1px;">
-                                TOTAL HT
-                            </td>
-                            <td style="width: 25%;text-align:center;border-bottom-style:solid;border-bottom-width:1px;">' . \CurrencyField::convertToUserFormat($ht, null, true) . '</td>
-                        </tr>
-                        <tr>
-                            <td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;border-bottom-style:solid;border-bottom-width:1px;">
-                                TVA 20%
-                            </td>
-                            <td style="width: 25%;text-align:center;border-bottom-style:solid;border-bottom-width:1px;">' . \CurrencyField::convertToUserFormat($ht * 0.2, null, true) . '</td>
-                        </tr>
-                        <tr>
-                            <td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;">
-                                TOTAL TTC
-                            </td>
-                            <td style="width: 25%;text-align:center;">' . \CurrencyField::convertToUserFormat($ttc, null, true) . '</td>
-                        </tr>
-                    </table>
-                </div>
-            ';
+			<div style="padding: 0px 0px 0px 221px">
+				<table style="width:100%;font-size:8px;margin-top:15px;border:1px solid black;font-weight:bold;">
+					<tr>
+						<td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;border-bottom-style:solid;border-bottom-width:1px;">
+							TOTAL HT
+						</td>
+						<td style="width: 25%;text-align:center;border-bottom-style:solid;border-bottom-width:1px;">' . \CurrencyField::convertToUserFormat($ht, null, true) . '</td>
+					</tr>';
+            if ($tax > 0) {
+                $html .= '
+				<tr>
+					<td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;border-bottom-style:solid;border-bottom-width:1px;">
+						TVA 20%
+					</td>
+					<td style="width: 25%;text-align:center;border-bottom-style:solid;border-bottom-width:1px;">' . \CurrencyField::convertToUserFormat($tax, null, true) . '</td>
+				</tr>';
+            }
+            if ($discount > 0) {
+                $html .= '
+				<tr>
+					<td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;border-bottom-style:solid;border-bottom-width:1px;">
+						Remise
+					</td>
+					<td style="width: 25%;text-align:center;border-bottom-style:solid;border-bottom-width:1px;">' . \CurrencyField::convertToUserFormat($discount, null, true) . '</td>
+				</tr>';
+            }
+            $html .= '
+					<tr>
+						<td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;">
+							TOTAL TTC
+						</td>
+						<td style="width: 25%;text-align:center;">' . \CurrencyField::convertToUserFormat($ttc, null, true) . '</td>
+					</tr>
+				</table>
+			</div>';
 
             $currency = \Vtiger_Util_Helper::is_decimal($ttc) ? '' : ' DIRHAMS';
-            $html .= '<div style="font-size:9px;margin-top:20px;"><b>ARRÊTÉE LA PRÉSENTE FACTURE À LA SOMME DE : ' . \Vtiger_Util_Helper::int2str($ttc) . $currency . ' TTC</b></div>';
+            $html .= '<div style="font-size:9px;margin-top:20px;"><b>ARRÊTÉE LA PRÉSENTE FACTURE À LA SOMME DE :</b><br /><b>' . \Vtiger_Util_Helper::int2str($ttc) . $currency . ' TTC</b></div>';
         }
         return $html;
     }
