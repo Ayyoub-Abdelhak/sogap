@@ -127,7 +127,7 @@ class ProductsTableFactureVersion extends Base
                     } else {
                         $itemValue = $inventoryRow[$columnName];
                         if ('Name' === $typeName) {
-							$fieldStyle = $bodyStyle . 'width: 300px !important;' . $displayStyle;
+                            $fieldStyle = $bodyStyle . 'width: 300px !important;' . $displayStyle;
                             if ($discount > 0) {
                                 $fieldStyle = $bodyStyle . 'width: 250px !important;' . $displayStyle;
                             }
@@ -142,13 +142,13 @@ class ProductsTableFactureVersion extends Base
                             }
                         } elseif (\in_array($typeName, ['GrossPrice', 'UnitPrice', 'TotalPrice', 'Discount']) && !empty($currencySymbol)) {
                             $fieldValue = \CurrencyField::appendCurrencySymbol($fieldModel->getDisplayValue($itemValue, $inventoryRow), $currencySymbol);
-							$fieldStyle = $bodyStyle . 'text-align:left;white-space: nowrap;';
+                            $fieldStyle = $bodyStyle . 'text-align:left;white-space: nowrap;';
                         } else {
                             $fieldValue = $fieldModel->getDisplayValue($itemValue, $inventoryRow, true);
                         }
                         $fieldValue = in_array($fieldValue, ['0', '0 DH', 'nan']) ? '' : $fieldValue;
-                        $fieldValue = str_replace("DH","",$fieldValue);
-						$html .= "<td class=\"col-type-{$typeName}\" style=\"{$fieldStyle}\">" . $fieldValue . '</td>';
+                        $fieldValue = str_replace("DH", "", $fieldValue);
+                        $html .= "<td class=\"col-type-{$typeName}\" style=\"{$fieldStyle}\">" . $fieldValue . '</td>';
                     }
                 }
                 $html .= '</tr>';
@@ -164,6 +164,12 @@ class ProductsTableFactureVersion extends Base
             }
             $html .= '</tr></tfoot></table>';
 
+            $receptionDefinitivePercentage = intval($this->textParser->recordModel->get('reception_definitive'));
+            $receptionDefinitive = $ht * $receptionDefinitivePercentage / 100;
+            $totalHT = $ht - $receptionDefinitive - $discount;
+            $totalTVA = $receptionDefinitive > 0 ? $totalHT * 0.2 : $tax;
+            $totalTTC = $totalHT + $totalTVA;
+
             $html .= '
 			<div style="padding: 0px 0px 0px 221px">
 				<table style="width:100%;font-size:8px;margin-top:15px;border:1px solid black;font-weight:bold;">
@@ -173,22 +179,38 @@ class ProductsTableFactureVersion extends Base
 						</td>
 						<td style="width: 25%;text-align:center;border-bottom-style:solid;border-bottom-width:1px;">' . \CurrencyField::convertToUserFormat($ht, null, true) . '</td>
 					</tr>';
-            if ($tax > 0) {
+            if ($discount > 0) {
+                $html .= '
+                <tr>
+                    <td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;border-bottom-style:solid;border-bottom-width:1px;">
+                        REMISE
+                    </td>
+                    <td style="width: 25%;text-align:center;border-bottom-style:solid;border-bottom-width:1px;">' . \CurrencyField::convertToUserFormat($discount, null, true) . '</td>
+                </tr>';
+            }
+            if ($receptionDefinitive > 0) {
+                $html .= '
+				<tr>
+					<td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;border-bottom-style:solid;border-bottom-width:1px;">
+						RÉCEPTION DÉFINITIVE ' . $receptionDefinitivePercentage . '%' . '
+					</td>
+					<td style="width: 25%;text-align:center;border-bottom-style:solid;border-bottom-width:1px;">' . \CurrencyField::convertToUserFormat($receptionDefinitive, null, true) . '</td>
+				</tr>';
+                $html .= '
+				<tr>
+					<td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;border-bottom-style:solid;border-bottom-width:1px;">
+						TOTAL HT
+					</td>
+					<td style="width: 25%;text-align:center;border-bottom-style:solid;border-bottom-width:1px;">' . \CurrencyField::convertToUserFormat($totalHT, null, true) . '</td>
+				</tr>';
+            }
+            if ($totalTVA > 0) {
                 $html .= '
 				<tr>
 					<td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;border-bottom-style:solid;border-bottom-width:1px;">
 						TVA 20%
 					</td>
-					<td style="width: 25%;text-align:center;border-bottom-style:solid;border-bottom-width:1px;">' . \CurrencyField::convertToUserFormat($tax, null, true) . '</td>
-				</tr>';
-            }
-            if ($discount > 0) {
-                $html .= '
-				<tr>
-					<td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;border-bottom-style:solid;border-bottom-width:1px;">
-						Remise
-					</td>
-					<td style="width: 25%;text-align:center;border-bottom-style:solid;border-bottom-width:1px;">' . \CurrencyField::convertToUserFormat($discount, null, true) . '</td>
+					<td style="width: 25%;text-align:center;border-bottom-style:solid;border-bottom-width:1px;">' . \CurrencyField::convertToUserFormat($totalTVA, null, true) . '</td>
 				</tr>';
             }
             $html .= '
@@ -196,13 +218,13 @@ class ProductsTableFactureVersion extends Base
 						<td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;">
 							TOTAL TTC
 						</td>
-						<td style="width: 25%;text-align:center;">' . \CurrencyField::convertToUserFormat($ttc, null, true) . '</td>
+						<td style="width: 25%;text-align:center;">' . \CurrencyField::convertToUserFormat($totalTTC, null, true) . '</td>
 					</tr>
 				</table>
 			</div>';
 
-            $currency = \Vtiger_Util_Helper::is_decimal($ttc) ? '' : ' DIRHAMS';
-            $html .= '<div style="font-size:9px;margin-top:20px;"><b>ARRÊTÉE LA PRÉSENTE FACTURE À LA SOMME DE :</b><br /><b>' . \Vtiger_Util_Helper::int2str($ttc) . $currency . ' TTC</b></div>';
+            $currency = \Vtiger_Util_Helper::is_decimal($totalTTC) ? '' : ' DIRHAMS';
+            $html .= '<div style="font-size:9px;margin-top:20px;"><b>ARRÊTÉE LA PRÉSENTE FACTURE À LA SOMME DE :</b><br /><b>' . \Vtiger_Util_Helper::int2str($totalTTC) . $currency . ' TTC</b></div>';
         }
         return $html;
     }

@@ -191,7 +191,7 @@ class ProductsTableDevisVersion extends Base
 				$html .= '
 				<tr>
 					<td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;border-bottom-style:solid;border-bottom-width:1px;">
-						Remise
+						REMISE
 					</td>
 					<td style="width: 25%;text-align:center;border-bottom-style:solid;border-bottom-width:1px;">' . \CurrencyField::convertToUserFormat($discount, null, true) . '</td>
 				</tr>';

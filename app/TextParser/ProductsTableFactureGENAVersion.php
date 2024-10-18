@@ -176,42 +176,64 @@ class ProductsTableFactureGENAVersion extends Base
             }
             $html .= '</tr></tfoot></table>';
 
+            $retenueGarantiePercentage = intval($this->textParser->recordModel->get('retenue_garantie'));
+            $retenueGarantie = $ht * $retenueGarantiePercentage / 100;
+            $totalHT = $ht - $retenueGarantie - $discount;
+            $totalTVA = $retenueGarantie > 0 ? $totalHT * 0.2 : $tax;
+            $totalTTC = $totalHT + $totalTVA;
+
             $html .= '
-                <div style="padding: 0px 0px 0px 221px">
-                    <table style="width:100%;font-size:8px;margin-top:15px;border:1px solid black;font-weight:bold;">
-                        <tr>
-                            <td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;border-bottom-style:solid;border-bottom-width:1px;">
-                                TOTAL HT
-                            </td>
-                            <td style="width: 25%;text-align:center;border-bottom-style:solid;border-bottom-width:1px;">' . \CurrencyField::convertToUserFormat($ht, null, true) . '</td>
-                        </tr>
-                        <tr>
-                            <td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;border-bottom-style:solid;border-bottom-width:1px;">
-                                RETENUE DE GARANTIE 10%
-                            </td>
-                            <td style="width: 25%;text-align:center;border-bottom-style:solid;border-bottom-width:1px;">' . \CurrencyField::convertToUserFormat($ht * 0.1, null, true) . '</td>
-                        </tr>
-                        <tr>
-                            <td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;border-bottom-style:solid;border-bottom-width:1px;">
-                                TOTAL APRES RG HT
-                            </td>
-                            <td style="width: 25%;text-align:center;border-bottom-style:solid;border-bottom-width:1px;">' . \CurrencyField::convertToUserFormat(($ht * 0.9) * 1.2, null, true) . '</td>
-                        </tr>
-                        <tr>
-                            <td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;border-bottom-style:solid;border-bottom-width:1px;">
-                                TVA 20%
-                            </td>
-                            <td style="width: 25%;text-align:center;border-bottom-style:solid;border-bottom-width:1px;">' . \CurrencyField::convertToUserFormat($ht * 0.2, null, true) . '</td>
-                        </tr>
-                        <tr>
-                            <td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;">
-                                TOTAL TTC
-                            </td>
-                            <td style="width: 25%;text-align:center;">' . \CurrencyField::convertToUserFormat($ttc, null, true) . '</td>
-                        </tr>
-                    </table>
-                </div>
-            ';
+			<div style="padding: 0px 0px 0px 221px">
+				<table style="width:100%;font-size:8px;margin-top:15px;border:1px solid black;font-weight:bold;">
+					<tr>
+						<td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;border-bottom-style:solid;border-bottom-width:1px;">
+							TOTAL HT
+						</td>
+						<td style="width: 25%;text-align:center;border-bottom-style:solid;border-bottom-width:1px;">' . \CurrencyField::convertToUserFormat($ht, null, true) . '</td>
+					</tr>';
+            if ($discount > 0) {
+                $html .= '
+                <tr>
+                    <td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;border-bottom-style:solid;border-bottom-width:1px;">
+                        Remise
+                    </td>
+                    <td style="width: 25%;text-align:center;border-bottom-style:solid;border-bottom-width:1px;">' . \CurrencyField::convertToUserFormat($discount, null, true) . '</td>
+                </tr>';
+            }
+            if ($retenueGarantie > 0) {
+                $html .= '
+				<tr>
+					<td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;border-bottom-style:solid;border-bottom-width:1px;">
+						RETENUE DE GARANTIE ' . $retenueGarantiePercentage . '%' . '
+					</td>
+					<td style="width: 25%;text-align:center;border-bottom-style:solid;border-bottom-width:1px;">' . \CurrencyField::convertToUserFormat($retenueGarantie, null, true) . '</td>
+				</tr>';
+                $html .= '
+				<tr>
+					<td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;border-bottom-style:solid;border-bottom-width:1px;">
+						TOTAL HT
+					</td>
+					<td style="width: 25%;text-align:center;border-bottom-style:solid;border-bottom-width:1px;">' . \CurrencyField::convertToUserFormat($totalHT, null, true) . '</td>
+				</tr>';
+            }
+            if ($totalTVA > 0) {
+                $html .= '
+				<tr>
+					<td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;border-bottom-style:solid;border-bottom-width:1px;">
+						TVA 20%
+					</td>
+					<td style="width: 25%;text-align:center;border-bottom-style:solid;border-bottom-width:1px;">' . \CurrencyField::convertToUserFormat($totalTVA, null, true) . '</td>
+				</tr>';
+            }
+            $html .= '
+					<tr>
+						<td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;">
+							TOTAL APRÈS RG TTC
+						</td>
+						<td style="width: 25%;text-align:center;">' . \CurrencyField::convertToUserFormat($totalTTC, null, true) . '</td>
+					</tr>
+				</table>
+			</div>';
 
             $currency = \Vtiger_Util_Helper::is_decimal($ttc) ? '' : ' DIRHAMS';
             $html .= '<div style="font-size:9px;margin-top:20px;"><b>ARRÊTÉE LA PRÉSENTE FACTURE À LA SOMME DE :</b><br /><b>' . \Vtiger_Util_Helper::int2str($ttc) . $currency . ' TTC</b></div>';
