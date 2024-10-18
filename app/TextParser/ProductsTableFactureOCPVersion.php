@@ -176,11 +176,12 @@ class ProductsTableFactureOCPVersion extends Base
             }
             $html .= '</tr></tfoot></table>';
 
+            $totalHT = $ht - $discount;
             $receptionDefinitivePercentage = intval($this->textParser->recordModel->get('reception_definitive'));
             $receptionProvisoirePercentage = intval($this->textParser->recordModel->get('reception_provisoire'));
-            $receptionDefinitive = $ht * $receptionDefinitivePercentage / 100;
-            $receptionProvisoire = $ht * $receptionProvisoirePercentage / 100;
-            $totalHT = $ht - $receptionDefinitive - $receptionProvisoire - $discount;
+            $receptionDefinitive = $totalHT * $receptionDefinitivePercentage / 100;
+            $receptionProvisoire = $totalHT * $receptionProvisoirePercentage / 100;
+            $totalHT = $totalHT - $receptionDefinitive - $receptionProvisoire;
             $totalTVA = ($receptionDefinitive > 0 || $receptionProvisoire > 0) ? $totalHT * 0.2 : $tax;
             $totalTTC = $totalHT + $totalTVA;
 

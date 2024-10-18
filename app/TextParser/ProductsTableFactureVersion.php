@@ -164,9 +164,10 @@ class ProductsTableFactureVersion extends Base
             }
             $html .= '</tr></tfoot></table>';
 
+            $totalHT = $ht - $discount;
             $receptionDefinitivePercentage = intval($this->textParser->recordModel->get('reception_definitive'));
-            $receptionDefinitive = $ht * $receptionDefinitivePercentage / 100;
-            $totalHT = $ht - $receptionDefinitive - $discount;
+            $receptionDefinitive = $totalHT * $receptionDefinitivePercentage / 100;
+            $totalHT = $totalHT - $receptionDefinitive;
             $totalTVA = $receptionDefinitive > 0 ? $totalHT * 0.2 : $tax;
             $totalTTC = $totalHT + $totalTVA;
 

@@ -176,9 +176,10 @@ class ProductsTableFactureGENAVersion extends Base
             }
             $html .= '</tr></tfoot></table>';
 
+            $totalHT = $ht - $discount;
             $retenueGarantiePercentage = intval($this->textParser->recordModel->get('retenue_garantie'));
-            $retenueGarantie = $ht * $retenueGarantiePercentage / 100;
-            $totalHT = $ht - $retenueGarantie - $discount;
+            $retenueGarantie = $totalHT * $retenueGarantiePercentage / 100;
+            $totalHT = $totalHT - $retenueGarantie - $discount;
             $totalTVA = $retenueGarantie > 0 ? $totalHT * 0.2 : $tax;
             $totalTTC = $totalHT + $totalTVA;
 
