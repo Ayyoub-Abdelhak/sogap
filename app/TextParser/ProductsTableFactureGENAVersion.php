@@ -51,7 +51,7 @@ class ProductsTableFactureGENAVersion extends Base
 					<tr>';
         $groupModels = [];
         $emptyTr = '<tr class="row">';
-        $lines = 15;
+        $lines = 10;
 
         $ht = 0;
         $tax = 0;
