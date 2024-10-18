@@ -131,7 +131,8 @@ class ProductsTableFactureVersion extends Base
                             if ($discount > 0) {
                                 $fieldStyle = $bodyStyle . 'width: 250px !important;' . $displayStyle;
                             }
-                            $fieldValue = $fieldModel->getDisplayValue($itemValue, $inventoryRow, true) === 'Produit non trouvé' ? '' : $fieldModel->getDisplayValue($itemValue, $inventoryRow, true);
+                            $fieldValue = $fieldModel->getDisplayValue($itemValue, $inventoryRow, true);
+                            $fieldValue = count($inventory->getFieldsByType('Comment')) > 0 ? '<strong>' . $fieldValue . '</strong>' : $fieldValue;
                             $lines--;
                             foreach ($inventory->getFieldsByType('Comment') as $commentField) {
                                 if ($commentField->isVisible() && ($value = $inventoryRow[$commentField->getColumnName()]) && $comment = $commentField->getDisplayValue($value, $inventoryRow, true)) {
