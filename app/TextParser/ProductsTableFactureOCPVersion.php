@@ -209,7 +209,7 @@ class ProductsTableFactureOCPVersion extends Base
 					<td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;border-bottom-style:solid;border-bottom-width:1px;">
 						RÉCEPTION PROVISOIRE ' . $receptionProvisoirePercentage . '%' . '
 					</td>
-					<td style="width: 25%;text-align:center;border-bottom-style:solid;border-bottom-width:1px;">' . \CurrencyField::convertToUserFormat($receptionDefinitive, null, true) . '</td>
+					<td style="width: 25%;text-align:center;border-bottom-style:solid;border-bottom-width:1px;">' . \CurrencyField::convertToUserFormat($receptionProvisoire, null, true) . '</td>
 				</tr>';
             }
             if ($receptionDefinitive > 0) {
