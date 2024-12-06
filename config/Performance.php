@@ -51,7 +51,7 @@ class Performance
 	public static $SEARCH_REFERENCE_BY_AJAX = false;
 
 	/** Max number of exported records */
-	public static $MAX_NUMBER_EXPORT_RECORDS = 500;
+	public static $MAX_NUMBER_EXPORT_RECORDS = 50000;
 
 	/** Max number of mass deleted records */
 	public static $maxMassDeleteRecords = 1000;

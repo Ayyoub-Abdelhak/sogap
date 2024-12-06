@@ -90,18 +90,6 @@
 .picklistCT_SQuotes_squotes_status_PLL_IN_REALIZATION { color: #01579B !important; }
 .picklistCBg_SQuotes_squotes_status_PLL_IN_REALIZATION { background: #01579B !important; font-weight: 500 !important; color: white !important;}
 .picklistLb_SQuotes_squotes_status_PLL_IN_REALIZATION { background: #01579B !important; font-weight: 500 !important; color: white !important;  padding: 2px 7px 3px 7px;}
-.picklistCBr_SQuotes_squotes_status_PLL_FOR_VERIFICATION { border-color: #5d2521 !important; }
-.picklistCT_SQuotes_squotes_status_PLL_FOR_VERIFICATION { color: #5d2521 !important; }
-.picklistCBg_SQuotes_squotes_status_PLL_FOR_VERIFICATION { background: #5d2521 !important; font-weight: 500 !important; color: white !important;}
-.picklistLb_SQuotes_squotes_status_PLL_FOR_VERIFICATION { background: #5d2521 !important; font-weight: 500 !important; color: white !important;  padding: 2px 7px 3px 7px;}
-.picklistCBr_SQuotes_squotes_status_PLL_AWAITING_DECISION { border-color: #FF6F00 !important; }
-.picklistCT_SQuotes_squotes_status_PLL_AWAITING_DECISION { color: #FF6F00 !important; }
-.picklistCBg_SQuotes_squotes_status_PLL_AWAITING_DECISION { background: #FF6F00 !important; font-weight: 500 !important; color: black !important;}
-.picklistLb_SQuotes_squotes_status_PLL_AWAITING_DECISION { background: #FF6F00 !important; font-weight: 500 !important; color: black !important;  padding: 2px 7px 3px 7px;}
-.picklistCBr_SQuotes_squotes_status_PLL_NEGOTIATIONS { border-color: #675d40 !important; }
-.picklistCT_SQuotes_squotes_status_PLL_NEGOTIATIONS { color: #675d40 !important; }
-.picklistCBg_SQuotes_squotes_status_PLL_NEGOTIATIONS { background: #675d40 !important; font-weight: 500 !important; color: white !important;}
-.picklistLb_SQuotes_squotes_status_PLL_NEGOTIATIONS { background: #675d40 !important; font-weight: 500 !important; color: white !important;  padding: 2px 7px 3px 7px;}
 .picklistCBr_SQuotes_squotes_status_PLL_CANCELLED { border-color: #D32F2F !important; }
 .picklistCT_SQuotes_squotes_status_PLL_CANCELLED { color: #D32F2F !important; }
 .picklistCBg_SQuotes_squotes_status_PLL_CANCELLED { background: #D32F2F !important; font-weight: 500 !important; color: white !important;}
@@ -142,3 +130,11 @@
 .picklistCT_SVendorEnquiries_svendorenquiries_status_Reservation { color: #1976D2 !important; }
 .picklistCBg_SVendorEnquiries_svendorenquiries_status_Reservation { background: #1976D2 !important; font-weight: 500 !important; color: white !important;}
 .picklistLb_SVendorEnquiries_svendorenquiries_status_Reservation { background: #1976D2 !important; font-weight: 500 !important; color: white !important;  padding: 2px 7px 3px 7px;}
+.picklistCBr_SVendorEnquiries_conformite_NCP { border-color: #D32F2F !important; }
+.picklistCT_SVendorEnquiries_conformite_NCP { color: #D32F2F !important; }
+.picklistCBg_SVendorEnquiries_conformite_NCP { background: #D32F2F !important; font-weight: 500 !important; color: white !important;}
+.picklistLb_SVendorEnquiries_conformite_NCP { background: #D32F2F !important; font-weight: 500 !important; color: white !important;  padding: 2px 7px 3px 7px;}
+.picklistCBr_SVendorEnquiries_conformite_NCR { border-color: #D32F2F !important; }
+.picklistCT_SVendorEnquiries_conformite_NCR { color: #D32F2F !important; }
+.picklistCBg_SVendorEnquiries_conformite_NCR { background: #D32F2F !important; font-weight: 500 !important; color: white !important;}
+.picklistLb_SVendorEnquiries_conformite_NCR { background: #D32F2F !important; font-weight: 500 !important; color: white !important;  padding: 2px 7px 3px 7px;}
