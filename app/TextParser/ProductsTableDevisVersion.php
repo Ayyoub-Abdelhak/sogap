@@ -114,8 +114,6 @@ class ProductsTableDevisVersion extends Base
 					$displayStyle = 'font-weight:bold;font-size:8.5px;';
 				} elseif ($displayType == 'ST') {
 					$displayStyle = 'font-weight:bold;';
-				} else {
-					$displayStyle = 'font-weight:normal;';
 				}
 
 				$html .= '<tr class="row-' . $counter . '">';
@@ -147,7 +145,7 @@ class ProductsTableDevisVersion extends Base
 							}
 						} elseif (\in_array($typeName, ['GrossPrice', 'UnitPrice', 'TotalPrice', 'Discount']) && !empty($currencySymbol)) {
 							$fieldValue = \CurrencyField::appendCurrencySymbol($fieldModel->getDisplayValue($itemValue, $inventoryRow), $currencySymbol);
-							$fieldStyle = $bodyStyle . 'text-align:left;white-space: nowrap;';
+							$fieldStyle = $bodyStyle . 'text-align:right;white-space: nowrap;';
 						} else {
 							$fieldValue = $fieldModel->getDisplayValue($itemValue, $inventoryRow, true);
 						}
