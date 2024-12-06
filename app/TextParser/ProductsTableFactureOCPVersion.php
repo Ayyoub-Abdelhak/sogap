@@ -144,7 +144,14 @@ class ProductsTableFactureOCPVersion extends Base
                                 $fieldStyle = $bodyStyle . 'width: 250px !important;' . $displayStyle;
                             }
                             $fieldValue = $fieldModel->getDisplayValue($itemValue, $inventoryRow, true);
-                            $fieldValue = count($inventory->getFieldsByType('Comment')) > 0 ? '<strong>' . $fieldValue . '</strong>' : $fieldValue;
+
+                            $hasComments = array_reduce(
+                                $inventory->getFieldsByType('Comment'),
+                                fn($carry, $commentField) => $carry || ($commentField->isVisible() && ($value = $inventoryRow[$commentField->getColumnName()]) && $commentField->getDisplayValue($value, $inventoryRow, true)),
+                                false
+                            );
+                            $fieldValue = $hasComments ? '<strong>' . $fieldValue . '</strong>' : $fieldValue;
+
                             $lines--;
                             foreach ($inventory->getFieldsByType('Comment') as $commentField) {
                                 if ($commentField->isVisible() && ($value = $inventoryRow[$commentField->getColumnName()]) && $comment = $commentField->getDisplayValue($value, $inventoryRow, true)) {
@@ -154,7 +161,7 @@ class ProductsTableFactureOCPVersion extends Base
                             }
                         } elseif (\in_array($typeName, ['GrossPrice', 'UnitPrice', 'TotalPrice', 'Discount']) && !empty($currencySymbol)) {
                             $fieldValue = \CurrencyField::appendCurrencySymbol($fieldModel->getDisplayValue($itemValue, $inventoryRow), $currencySymbol);
-                            $fieldStyle = $bodyStyle . 'text-align:left;white-space: nowrap;';
+                            $fieldStyle = $bodyStyle . 'text-align:right;white-space: nowrap;';
                         } else {
                             $fieldValue = $fieldModel->getDisplayValue($itemValue, $inventoryRow, true);
                         }
