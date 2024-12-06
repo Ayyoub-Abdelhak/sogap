@@ -234,18 +234,15 @@ class Vtiger_Util_Helper
 	}
 
 	public static function int2str($a)
-    {
-		$obj = new Nuts($a, "DIRHAMS");
-		$text = $obj->convert("fr-FR");
-		$nb = $obj->getFormated(" ", ",");
-	}
-
-	public static function int2strOld($a)
 	{
         $convert = explode('.', $a);
-        if (isset($convert[1]) && $convert[1] != '') {
-            return self::int2str($convert[0]) . ' DIRHAMS, ' . self::int2str($convert[1]) . ' CTS';
-        }
+
+		if (isset($convert[1]) && $convert[1] !== '') {
+			$decimalPart = substr($convert[1], 0, 2);
+			$decimalInt = (int) $decimalPart;
+			return self::int2str((int) $convert[0]) . ' DIRHAMS, ' . self::int2str($decimalInt) . ' CTS';
+		}
+
         if ($a < 0) {
             return 'MOINS ' . self::int2str(-$a);
         }
@@ -314,11 +311,16 @@ class Vtiger_Util_Helper
         } else if ($a < 1000000) {
             return self::int2str((int) ($a / 1000)) . ' ' . self::int2str(1000) . ' ' . self::int2str($a % 1000);
         } else if ($a == 1000000) {
-            return 'MILLIONS';
-        } else if ($a < 2000000) {
-            return self::int2str(1000000) . ' ' . self::int2str($a % 1000000) . ' ';
-        } else if ($a < 1000000000) {
-            return self::int2str((int) ($a / 1000000)) . ' ' . self::int2str(1000000) . ' ' . self::int2str($a % 1000000);
-        }
+			// Exactly one million
+			return 'UN MILLION';
+		} else if ($a < 2000000) {
+			// Between 1,000,001 and 1,999,999
+			return 'UN MILLION ' . self::int2str($a % 1000000);
+		} else if ($a < 1000000000) {
+			// Multiple millions
+			$millions = (int) ($a / 1000000);
+			$rest = $a % 1000000;
+			return self::int2str($millions) . ' MILLIONS ' . self::int2str($rest);
+		}
     }
 }
