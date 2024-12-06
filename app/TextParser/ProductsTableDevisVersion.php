@@ -57,6 +57,19 @@ class ProductsTableDevisVersion extends Base
 		$tax = 0;
 		$ttc = 0;
 		$discount = 0;
+		$discountModeIsGroup = false;
+		$discountPercentage = 0;
+
+		foreach ($inventoryRows as $inventoryRow) {
+			if ($inventoryRow['discountmode'] === 0) {
+				$discountModeIsGroup = true;
+				$discountParam = json_decode($inventoryRow['discountparam'], true);
+				if (isset($discountParam['individualDiscountType']) && $discountParam['individualDiscountType'] === 'percentage') {
+					$discountPercentage = $discountParam['individualDiscount'] ?? 0;
+				}
+				break;
+			}
+		}
 		foreach (['TotalPrice', 'Tax', 'GrossPrice', 'Discount'] as $fieldType) {
 			foreach ($inventory->getFieldsByType($fieldType) as $fieldModel) {
 				foreach ($inventoryRows as $inventoryRow) {
@@ -78,7 +91,7 @@ class ProductsTableDevisVersion extends Base
 		$ttc = round($ttc, 2);
 
 		$fieldTypes = ['Name', 'Value', 'Quantity', 'UnitPrice', 'TotalPrice'];
-		if ($discount > 0) {
+		if ($discount > 0 && !$discountModeIsGroup) {
 			$fieldTypes[] = 'Discount';
 		}
 		foreach ($fieldTypes as $fieldType) {
@@ -189,7 +202,7 @@ class ProductsTableDevisVersion extends Base
 				$html .= '
 				<tr>
 					<td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;border-bottom-style:solid;border-bottom-width:1px;">
-						REMISE
+						REMISE (' . $discountPercentage . '%)
 					</td>
 					<td style="width: 25%;text-align:center;border-bottom-style:solid;border-bottom-width:1px;">' . \CurrencyField::convertToUserFormat($discount, null, true) . '</td>
 				</tr>';
