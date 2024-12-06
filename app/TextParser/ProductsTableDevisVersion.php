@@ -135,13 +135,13 @@ class ProductsTableDevisVersion extends Base
 							if ($discount > 0) {
 								$fieldStyle = $bodyStyle . 'width: 250px !important;' . $displayStyle;
 							}
-							$fieldValue = str_replace('Produit non trouvé', '', $fieldModel->getDisplayValue($itemValue, $inventoryRow, true));
-							// $fieldValue = $fieldModel->getDisplayValue($itemValue, $inventoryRow, true);
+							$isProductNotFound = $fieldModel->getDisplayValue($itemValue, $inventoryRow, true) === 'Produit non trouvé';
+							$fieldValue = $isProductNotFound ? '' : $fieldModel->getDisplayValue($itemValue, $inventoryRow, true);
 							$fieldValue = count($inventory->getFieldsByType('Comment')) > 0 ? '<strong>' . $fieldValue . '</strong>' : $fieldValue;
 							$lines--;
 							foreach ($inventory->getFieldsByType('Comment') as $commentField) {
 								if ($commentField->isVisible() && ($value = $inventoryRow[$commentField->getColumnName()]) && $comment = $commentField->getDisplayValue($value, $inventoryRow, true)) {
-									$fieldValue .= '<br />' . $comment;
+									$fieldValue .= $isProductNotFound ? $comment : '<br />' . $comment;
 									$lines--;
 								}
 							}
