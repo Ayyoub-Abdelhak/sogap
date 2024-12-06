@@ -188,7 +188,7 @@ class ProductsTableFactureGENAVersion extends Base
             $totalTTC = $totalHT + $totalTVA;
             $retenueGarantiePercentage = intval($this->textParser->recordModel->get('retenue_garantie'));
             $retenueGarantie = $totalTTC * $retenueGarantiePercentage / 100;
-            $totalRGTTC = $totalTTC - $retenueGarantie;
+            $totalRGTTC = round($totalTTC - $retenueGarantie, 2);
 
             $html .= '
 			<div style="padding: 0px 0px 0px 221px">

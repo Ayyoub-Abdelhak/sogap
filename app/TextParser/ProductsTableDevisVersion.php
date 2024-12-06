@@ -75,6 +75,7 @@ class ProductsTableDevisVersion extends Base
 				}
 			}
 		}
+		$ttc = round($ttc, 2);
 
 		$fieldTypes = ['Name', 'Value', 'Quantity', 'UnitPrice', 'TotalPrice'];
 		if ($discount > 0) {

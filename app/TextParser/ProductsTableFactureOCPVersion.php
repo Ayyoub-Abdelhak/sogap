@@ -190,7 +190,7 @@ class ProductsTableFactureOCPVersion extends Base
             $receptionProvisoire = $totalHT * $receptionProvisoirePercentage / 100;
             $totalHT = $totalHT - $receptionDefinitive - $receptionProvisoire;
             $totalTVA = ($receptionDefinitive > 0 || $receptionProvisoire > 0) ? $totalHT * 0.2 : $tax;
-            $totalTTC = $totalHT + $totalTVA;
+            $totalTTC = round($totalHT + $totalTVA, 2);
 
             $html .= '
 			<div style="padding: 0px 0px 0px 221px">

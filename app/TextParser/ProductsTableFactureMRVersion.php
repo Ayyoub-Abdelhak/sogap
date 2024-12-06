@@ -75,6 +75,7 @@ class ProductsTableFactureMRVersion extends Base
                 }
             }
         }
+        $ht = round($ht, 2);
 
         $fieldTypes = ['Name', 'Value', 'Quantity', 'UnitPrice', 'TotalPrice'];
         if ($discount > 0) {

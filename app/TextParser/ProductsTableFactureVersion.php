@@ -177,7 +177,7 @@ class ProductsTableFactureVersion extends Base
             $receptionDefinitive = $totalHT * $receptionDefinitivePercentage / 100;
             $totalHT = $totalHT - $receptionDefinitive;
             $totalTVA = $receptionDefinitive > 0 ? $totalHT * 0.2 : $tax;
-            $totalTTC = $totalHT + $totalTVA;
+            $totalTTC = round($totalHT + $totalTVA, 2);
 
             $html .= '
 			<div style="padding: 0px 0px 0px 221px">
