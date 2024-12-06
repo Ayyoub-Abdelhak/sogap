@@ -233,8 +233,15 @@ class Vtiger_Util_Helper
 		return is_numeric($val) && floor($val) != $val;
 	}
 
-    public static function int2str($a)
+	public static function int2str($a)
     {
+		$obj = new Nuts($a, "DIRHAMS");
+		$text = $obj->convert("fr-FR");
+		$nb = $obj->getFormated(" ", ",");
+	}
+
+	public static function int2strOld($a)
+	{
         $convert = explode('.', $a);
         if (isset($convert[1]) && $convert[1] != '') {
             return self::int2str($convert[0]) . ' DIRHAMS, ' . self::int2str($convert[1]) . ' CTS';

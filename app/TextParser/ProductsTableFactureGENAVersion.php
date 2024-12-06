@@ -237,7 +237,7 @@ class ProductsTableFactureGENAVersion extends Base
 			</div>';
 
             $currency = \Vtiger_Util_Helper::is_decimal($totalTTC) ? '' : ' DIRHAMS';
-            $html .= '<div style="font-size:9px;margin-top:20px;"><b>ARRÊTÉE LA PRÉSENTE FACTURE À LA SOMME DE :</b><br /><b>' . \Vtiger_Util_Helper::int2str($totalTTC) . $currency . ' TTC</b></div>';
+            $html .= '<div style="font-size:9px;margin-top:20px;"><b>ARRÊTÉE LA PRÉSENTE FACTURE À LA SOMME DE :</b><br /><b>' . \Vtiger_Util_Helper::int2str($totalRGTTC) . $currency . ' TTC</b></div>';
         }
         return $html;
     }
