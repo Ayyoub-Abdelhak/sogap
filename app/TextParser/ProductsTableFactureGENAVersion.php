@@ -177,11 +177,11 @@ class ProductsTableFactureGENAVersion extends Base
             $html .= '</tr></tfoot></table>';
 
             $totalHT = $ht - $discount;
-            $retenueGarantiePercentage = intval($this->textParser->recordModel->get('retenue_garantie'));
-            $retenueGarantie = $totalHT * $retenueGarantiePercentage / 100;
-            $totalHT = $totalHT - $retenueGarantie - $discount;
-            $totalTVA = $retenueGarantie > 0 ? $totalHT * 0.2 : $tax;
+            $totalTVA = $totalHT * 0.2;
             $totalTTC = $totalHT + $totalTVA;
+            $retenueGarantiePercentage = intval($this->textParser->recordModel->get('retenue_garantie'));
+            $retenueGarantie = $totalTTC * $retenueGarantiePercentage / 100;
+            $totalRGTTC = $totalTTC - $retenueGarantie;
 
             $html .= '
 			<div style="padding: 0px 0px 0px 221px">
@@ -201,22 +201,6 @@ class ProductsTableFactureGENAVersion extends Base
                     <td style="width: 25%;text-align:center;border-bottom-style:solid;border-bottom-width:1px;">' . \CurrencyField::convertToUserFormat($discount, null, true) . '</td>
                 </tr>';
             }
-            if ($retenueGarantie > 0) {
-                $html .= '
-				<tr>
-					<td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;border-bottom-style:solid;border-bottom-width:1px;">
-						RETENUE DE GARANTIE ' . $retenueGarantiePercentage . '%' . '
-					</td>
-					<td style="width: 25%;text-align:center;border-bottom-style:solid;border-bottom-width:1px;">' . \CurrencyField::convertToUserFormat($retenueGarantie, null, true) . '</td>
-				</tr>';
-                $html .= '
-				<tr>
-					<td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;border-bottom-style:solid;border-bottom-width:1px;">
-						TOTAL HT
-					</td>
-					<td style="width: 25%;text-align:center;border-bottom-style:solid;border-bottom-width:1px;">' . \CurrencyField::convertToUserFormat($totalHT, null, true) . '</td>
-				</tr>';
-            }
             if ($totalTVA > 0) {
                 $html .= '
 				<tr>
@@ -227,11 +211,27 @@ class ProductsTableFactureGENAVersion extends Base
 				</tr>';
             }
             $html .= '
+				<tr>
+					<td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;border-bottom-style:solid;border-bottom-width:1px;">
+						TOTAL TTC
+					</td>
+					<td style="width: 25%;text-align:center;border-bottom-style:solid;border-bottom-width:1px;">' . \CurrencyField::convertToUserFormat($totalTTC, null, true) . '</td>
+				</tr>';
+            if ($retenueGarantie > 0) {
+                $html .= '
+				<tr>
+					<td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;border-bottom-style:solid;border-bottom-width:1px;">
+						RETENUE DE GARANTIE ' . $retenueGarantiePercentage . '%' . '
+					</td>
+					<td style="width: 25%;text-align:center;border-bottom-style:solid;border-bottom-width:1px;">' . \CurrencyField::convertToUserFormat($retenueGarantie, null, true) . '</td>
+				</tr>';
+            }
+            $html .= '
 					<tr>
 						<td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;">
 							TOTAL APRÈS RG TTC
 						</td>
-						<td style="width: 25%;text-align:center;">' . \CurrencyField::convertToUserFormat($totalTTC, null, true) . '</td>
+						<td style="width: 25%;text-align:center;">' . \CurrencyField::convertToUserFormat($totalRGTTC, null, true) . '</td>
 					</tr>
 				</table>
 			</div>';
