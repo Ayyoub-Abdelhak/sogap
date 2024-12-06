@@ -135,7 +135,8 @@ class ProductsTableDevisVersion extends Base
 							if ($discount > 0) {
 								$fieldStyle = $bodyStyle . 'width: 250px !important;' . $displayStyle;
 							}
-							$fieldValue = $fieldModel->getDisplayValue($itemValue, $inventoryRow, true);
+							$fieldValue = str_replace('Produit non trouvé', '', $fieldModel->getDisplayValue($itemValue, $inventoryRow, true));
+							// $fieldValue = $fieldModel->getDisplayValue($itemValue, $inventoryRow, true);
 							$fieldValue = count($inventory->getFieldsByType('Comment')) > 0 ? '<strong>' . $fieldValue . '</strong>' : $fieldValue;
 							$lines--;
 							foreach ($inventory->getFieldsByType('Comment') as $commentField) {
@@ -178,15 +179,6 @@ class ProductsTableDevisVersion extends Base
 						</td>
 						<td style="width: 25%;text-align:center;border-bottom-style:solid;border-bottom-width:1px;">' . \CurrencyField::convertToUserFormat($ht, null, true) . '</td>
 					</tr>';
-			if ($tax > 0) {
-				$html .= '
-				<tr>
-					<td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;border-bottom-style:solid;border-bottom-width:1px;">
-						TVA 20%
-					</td>
-					<td style="width: 25%;text-align:center;border-bottom-style:solid;border-bottom-width:1px;">' . \CurrencyField::convertToUserFormat($tax, null, true) . '</td>
-				</tr>';
-			}
 			if ($discount > 0) {
 				$html .= '
 				<tr>
@@ -194,6 +186,22 @@ class ProductsTableDevisVersion extends Base
 						REMISE
 					</td>
 					<td style="width: 25%;text-align:center;border-bottom-style:solid;border-bottom-width:1px;">' . \CurrencyField::convertToUserFormat($discount, null, true) . '</td>
+				</tr>';
+				$html .= '
+				<tr>
+					<td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;border-bottom-style:solid;border-bottom-width:1px;">
+						TOTAL HT
+					</td>
+					<td style="width: 25%;text-align:center;border-bottom-style:solid;border-bottom-width:1px;">' . \CurrencyField::convertToUserFormat($ht - $discount, null, true) . '</td>
+				</tr>';
+			}
+			if ($tax > 0) {
+				$html .= '
+				<tr>
+					<td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;border-bottom-style:solid;border-bottom-width:1px;">
+						TVA 20%
+					</td>
+					<td style="width: 25%;text-align:center;border-bottom-style:solid;border-bottom-width:1px;">' . \CurrencyField::convertToUserFormat($tax, null, true) . '</td>
 				</tr>';
 			}
 			$html .= '
