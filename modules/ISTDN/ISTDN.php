@@ -12,7 +12,7 @@ class ISTDN extends Vtiger_CRMEntity
 {
 	public $table_name = 'u_yf_istdn';
 	public $table_index = 'istdnid';
-	protected $lockFields = ['istdn_status' => ['PLL_ACCEPTED']];
+	// protected $lockFields = ['istdn_status' => ['PLL_ACCEPTED']];
 
 	/**
 	 * Mandatory table for supporting custom fields.

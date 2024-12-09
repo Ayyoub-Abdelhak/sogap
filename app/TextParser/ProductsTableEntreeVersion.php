@@ -2,14 +2,6 @@
 
 namespace App\TextParser;
 
-/**
- * Products table short version class.
- *
- * @package TextParser
- *
- * @copyright YetiForce S.A.
- * @license   YetiForce Public License 5.0 (licenses/LicenseEN.txt or yetiforce.com)
- */
 class ProductsTableEntreeVersion extends Base
 {
 	/** @var string Class name */
@@ -32,10 +24,14 @@ class ProductsTableEntreeVersion extends Base
 		$inventory = \Vtiger_Inventory_Model::getInstance($this->textParser->moduleName);
 		$inventoryRows = $this->textParser->recordModel->getInventoryData();
 
-		$headerStyle = 'font-size:9px;padding:0px 4px;text-align:center;background-color:#ddd;';
-		$bodyStyle = 'font-size:8px;border:1px solid #ddd;padding:0px 4px;';
+		// Updated styling with a border around the entire table
+		$headerStyle = 'font-size:9px;border:1px solid black;border-bottom:0px;padding:0px 4px;text-align:center;background-color:#D9E1F2;';
+		$bodyStyle = 'font-size:8px;border-left-color:#000000;border-left-style:solid;border-left-width:1px;border-right-color:#000000;border-right-style:solid;border-right-width:1px;border-bottom-style:solid;border-bottom-width:1px;padding:0px 4px;padding:0px 4px;vertical-align: top;';
 
-		$html .= '<table class="products-table-entree-version" style="width:100%;font-size:8px;border-collapse:collapse;">
+		// We'll aim for 25 total lines (products + empty lines)
+		$lines = 20;
+
+		$html .= '<table class="products-table-entree-version" style="width:100%;font-size:8px;border-collapse:collapse;border:1px solid #000000;">
 			<thead>
 				<tr>
 					<th style="' . $headerStyle . '">CodeP/M</th>
@@ -45,11 +41,15 @@ class ProductsTableEntreeVersion extends Base
 					<th style="' . $headerStyle . '">Etat</th>
 					<th style="' . $headerStyle . '">Affectation</th>
 				</tr>
-			</thead>';
+			</thead>
+			<tbody>';
 
 		if (!empty($inventoryRows)) {
-			$html .= '<tbody>';
 			foreach ($inventoryRows as $inventoryRow) {
+				if ($lines <= 0) {
+					break; // no more lines if we already exceeded desired count
+				}
+
 				$productId = $inventoryRow['name'];
 				if (empty($productId)) {
 					continue;
@@ -60,7 +60,6 @@ class ProductsTableEntreeVersion extends Base
 					continue;
 				}
 
-				// Fetch product details
 				$productNo = $productRecord->get('product_no');
 				$productName = $productRecord->get('productname');
 				$productType = $productRecord->get('type');
@@ -84,7 +83,7 @@ class ProductsTableEntreeVersion extends Base
 					}
 				}
 
-				$html .= '<tr>
+				$html .= '<tr class="row">
 					<td style="' . $bodyStyle . 'text-align:left;">' . htmlspecialchars($productNo) . '</td>
 					<td style="' . $bodyStyle . 'text-align:left;">' . htmlspecialchars($productName) . '</td>
 					<td style="' . $bodyStyle . 'text-align:left;">' . htmlspecialchars($productType) . '</td>
@@ -92,11 +91,27 @@ class ProductsTableEntreeVersion extends Base
 					<td style="' . $bodyStyle . 'text-align:left;">' . htmlspecialchars($etat) . '</td>
 					<td style="' . $bodyStyle . 'text-align:left;">' . htmlspecialchars($projectName) . '</td>
 				</tr>';
+
+				$lines--; // Decrement the lines count after each product row
 			}
-			$html .= '</tbody>';
 		}
 
-		$html .= '</table>';
+		// If there are lines left, we add empty rows
+		if ($lines > 0) {
+			// Construct the empty line template
+			$emptyTr = '<tr class="row">';
+			for ($col = 0; $col < 6; $col++) {
+				$emptyTr .= "<td style=\"{$bodyStyle}\">&nbsp;&nbsp;&nbsp;</td>";
+			}
+			$emptyTr .= '</tr>';
+
+			// Add empty lines until we have reached total desired lines
+			for ($i = 0; $i < $lines; $i++) {
+				$html .= $emptyTr;
+			}
+		}
+
+		$html .= '</tbody></table>';
 
 		return $html;
 	}

@@ -2,15 +2,6 @@
 
 namespace App\TextParser;
 
-/**
- * Products table short version class.
- *
- * @package TextParser
- *
- * @copyright YetiForce S.A.
- * @license   YetiForce Public License 5.0 (licenses/LicenseEN.txt or yetiforce.com)
- * @author    Arkadiusz Sołek <a.solek@yetiforce.com>
- */
 class ProductsTableSortieVersion extends Base
 {
 	/** @var string Class name */
@@ -32,86 +23,123 @@ class ProductsTableSortieVersion extends Base
 		}
 		$inventory = \Vtiger_Inventory_Model::getInstance($this->textParser->moduleName);
 		$inventoryRows = $this->textParser->recordModel->getInventoryData();
-		$firstRow = current($inventoryRows);
-		$baseCurrency = \Vtiger_Util_Helper::getBaseCurrency();
-		if ($inventory->isField('currency')) {
-			if (!empty($firstRow) && null !== $firstRow['currency']) {
-				$currency = $firstRow['currency'];
-			} else {
-				$currency = $baseCurrency['id'];
-			}
-			$currencySymbol = \App\Fields\Currency::getById($currency)['currency_symbol'];
-		} else {
-			$currencySymbol = \App\Fields\Currency::getDefault()['currency_symbol'];
-		}
-		$headerStyle = 'font-size:9px;padding:0px 4px;text-align:center;background-color:#ddd;';
-		$bodyStyle = 'font-size:8px;border:1px solid #ddd;padding:0px 4px;';
-		$html .= '<table class="products-table-long-version" style="width:100%;font-size:8px;border-collapse:collapse;">
-				<thead>
-					<tr>';
-		$groupModels = [];
-		foreach (['ItemNumber', 'Name', 'Quantity', 'UnitPrice', 'TotalPrice', 'GrossPrice'] as $fieldType) {
-			foreach ($inventory->getFieldsByType($fieldType) as $fieldModel) {
-				$columnName = $fieldModel->getColumnName();
-				if (!$fieldModel->isVisible()) {
+
+		// Updated styling with a border around the entire table
+		$headerStyle = 'font-size:9px;border:1px solid black;border-bottom:0px;padding:0px 4px;text-align:center;background-color:#D9E1F2;';
+		$bodyStyle = 'font-size:8px;border-left-color:#000000;border-left-style:solid;border-left-width:1px;border-right-color:#000000;border-right-style:solid;border-right-width:1px;border-bottom-style:solid;border-bottom-width:1px;padding:0px 4px;vertical-align: top;';
+
+		// We'll aim for 25 total lines (products + empty lines)
+		$lines = 20;
+
+		$html .= '<table class="products-table-entree-version" style="width:100%;font-size:8px;border-collapse:collapse;border:1px solid #000000;">
+			<thead>
+				<tr>
+					<th style="' . $headerStyle . '">CodeP/M</th>
+					<th style="' . $headerStyle . '">Libellé</th>
+					<th style="' . $headerStyle . '">Type</th>
+					<th style="' . $headerStyle . '">Fournisseur</th>
+					<th style="' . $headerStyle . '">Etat</th>
+					<th style="' . $headerStyle . '">Affectation</th>
+				</tr>
+			</thead>
+			<tbody>';
+
+		if (!empty($inventoryRows)) {
+			foreach ($inventoryRows as $inventoryRow) {
+				if ($lines <= 0) {
+					break; // no more lines if we already exceeded desired count
+				}
+
+				$productId = $inventoryRow['name'];
+				if (empty($productId)) {
 					continue;
 				}
-				$html .= "<th style=\"{$headerStyle}\">" . \App\Language::translate($fieldModel->get('label'), $this->textParser->moduleName) . '</th>';
-				$groupModels[$columnName] = $fieldModel;
-			}
-		}
-		$html .= '</tr></thead>';
-		if (!empty($groupModels)) {
-			$html .= '<tbody>';
-			$counter = 0;
-			foreach ($inventoryRows as $inventoryRow) {
-				++$counter;
-				$html .= '<tr class="row-' . $counter . '">';
-				foreach ($groupModels as $fieldModel) {
-					$columnName = $fieldModel->getColumnName();
-					$typeName = $fieldModel->getType();
-					$fieldStyle = $bodyStyle;
-					if ('ItemNumber' === $typeName) {
-						$html .= "<td style=\"{$bodyStyle}font-weight:bold;\">" . $counter++ . '</td>';
-					} elseif ('ean' === $columnName) {
-						$code = $inventoryRow[$columnName];
-						$html .= "<td class=\"col-type-barcode\" style=\"{$fieldStyle}font-weight:bold;text-align:center;\"><div data-barcode=\"EAN13\" data-code=\"{$code}\" data-size=\"1\" data-height=\"16\">{$code}</div></td>";
-					} else {
-						$itemValue = $inventoryRow[$columnName];
-						if ('Name' === $typeName) {
-							$fieldStyle = $bodyStyle . 'text-align:left;';
-							$fieldValue = '<strong>' . $fieldModel->getDisplayValue($itemValue, $inventoryRow, true) . '</strong>';
-							foreach ($inventory->getFieldsByType('Comment') as $commentField) {
-								if ($commentField->isVisible() && ($value = $inventoryRow[$commentField->getColumnName()]) && $comment = $commentField->getDisplayValue($value, $inventoryRow, true)) {
-									$fieldValue .= '<br />' . $comment;
-								}
-							}
-						} elseif (\in_array($typeName, ['GrossPrice', 'UnitPrice', 'TotalPrice']) && !empty($currencySymbol)) {
-							$fieldValue = \CurrencyField::appendCurrencySymbol($fieldModel->getDisplayValue($itemValue, $inventoryRow), $currencySymbol);
-							$fieldStyle = $bodyStyle . 'text-align:right;white-space: nowrap;';
-						} else {
-							$fieldValue = $fieldModel->getDisplayValue($itemValue, $inventoryRow, true);
-						}
-						$html .= "<td class=\"col-type-{$typeName}\" style=\"{$fieldStyle}\">" . $fieldValue . '</td>';
+
+				$productRecord = \Vtiger_Record_Model::getInstanceById($productId, 'Products');
+				if (!$productRecord) {
+					continue;
+				}
+
+				$productNo = $productRecord->get('product_no');
+				$productName = $productRecord->get('productname');
+				$productType = $productRecord->get('type');
+				$etat = $productRecord->get('etatmateriel');
+
+				// Fetch vendor name
+				$vendorName = '';
+				if ($vendorId = $productRecord->get('vendor_id')) {
+					$vendorRecord = \Vtiger_Record_Model::getInstanceById($vendorId, 'Vendors');
+					if ($vendorRecord) {
+						$vendorName = $vendorRecord->get('vendorname');
 					}
 				}
-				$html .= '</tr>';
-			}
-			$html .= '</tbody><tfoot><tr>';
-			foreach ($groupModels as $fieldModel) {
-				$headerStyle = 'font-size:7px;padding:0px 4px;text-align:center;background-color:#ddd;';
-				$html .= "<th class=\"col-type-{$typeName}\" style=\"{$headerStyle}\">";
-				if ($fieldModel->isSummary()) {
-					$sum = 0;
-					foreach ($inventoryRows as $inventoryRow) {
-						$sum += $inventoryRow[$fieldModel->getColumnName()];
+
+				// Fetch project name for Affectation
+				$projectName = '';
+				if ($projectId = $productRecord->get('affectation')) {
+					$projectRecord = \Vtiger_Record_Model::getInstanceById($projectId, 'Project');
+					if ($projectRecord) {
+						$projectName = $projectRecord->get('projectname');
 					}
-					$html .= \CurrencyField::appendCurrencySymbol(\CurrencyField::convertToUserFormat($sum, null, true), $currencySymbol);
 				}
-				$html .= '</th>';
+
+				$html .= '<tr class="row">
+					<td style="' . $bodyStyle . 'text-align:left;">' . htmlspecialchars($productNo) . '</td>
+					<td style="' . $bodyStyle . 'text-align:left;">' . htmlspecialchars($productName) . '</td>
+					<td style="' . $bodyStyle . 'text-align:left;">' . htmlspecialchars($productType) . '</td>
+					<td style="' . $bodyStyle . 'text-align:left;">' . htmlspecialchars($vendorName) . '</td>
+					<td style="' . $bodyStyle . 'text-align:left;">' . htmlspecialchars($etat) . '</td>
+					<td style="' . $bodyStyle . 'text-align:left;">' . htmlspecialchars($projectName) . '</td>
+				</tr>';
+
+				$lines--; // Decrement the lines count after each product row
 			}
-			$html .= '</tr></tfoot></table>';
 		}
+
+		// If there are lines left, we add empty rows
+		if ($lines > 0) {
+			// Construct the empty line template
+			$emptyTr = '<tr class="row">';
+			for ($col = 0; $col < 6; $col++) {
+				$emptyTr .= "<td style=\"{$bodyStyle}\">&nbsp;&nbsp;&nbsp;</td>";
+			}
+			$emptyTr .= '</tr>';
+
+			// Add empty lines until we have reached total desired lines
+			for ($i = 0; $i < $lines; $i++) {
+				$html .= $emptyTr;
+			}
+		}
+
+		$html .= '</tbody></table>';
+
+		// Retrieve fields for the additional 3-block table
+		$expName = $this->textParser->recordModel->get('nom_expediteur');
+		$expLieu = $this->textParser->recordModel->get('lieu_expediteur');
+		$transName = $this->textParser->recordModel->get('nom_transporteur');
+		$transLieu = $this->textParser->recordModel->get('lieu_transporteur');
+		$destName = $this->textParser->recordModel->get('nom_destinataire');
+		$destLieu = $this->textParser->recordModel->get('lieu_destinataire');
+
+		// Add the 3-column table at the end
+		$html .= '<table style="width:100%;font-size:8px;border-collapse:collapse;margin-top:25px;">
+			<tr style="background-color:#D9E1F2;">
+				<td style="font-weight:bold;">Expediteur :</td>
+				<td style="font-weight:bold;">Transporteur :</td>
+				<td style="font-weight:bold;">Destinataire :</td>
+			</tr>
+			<tr>
+				<td>' . htmlspecialchars($expName) . '</td>
+				<td>' . htmlspecialchars($transName) . '</td>
+				<td>' . htmlspecialchars($destName) . '</td>
+			</tr>
+			<tr>
+				<td>Lieu: ' . htmlspecialchars($expLieu) . '</td>
+				<td>Lieu: ' . htmlspecialchars($transLieu) . '</td>
+				<td>Lieu: ' . htmlspecialchars($destLieu) . '</td>
+			</tr>
+		</table>';
+
 		return $html;
 	}
 }
