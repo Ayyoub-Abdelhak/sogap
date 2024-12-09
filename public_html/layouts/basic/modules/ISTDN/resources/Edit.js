@@ -7,7 +7,9 @@ Vtiger_Edit_Js(
   {
     getRecordsListParams: function (container) {
       var params = this._super(container);
-      params.cvId = "136";
+      if (jQuery.inArray(params.module, ["Products", "Services"]) != -1) {
+        params.cvId = "136";
+      }      
       return params;
     },
   }
