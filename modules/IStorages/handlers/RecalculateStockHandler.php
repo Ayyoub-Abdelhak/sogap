@@ -52,9 +52,23 @@ class IStorages_RecalculateStockHandler_Handler
 	 */
 	public function updateStock(Vtiger_Record_Model $recordModel, string $action): void
 	{
+		if (!$recordModel->isNew()) {
+			return;
+		}
+		
 		$inventoryData = $recordModel->getInventoryData();
-		if (!empty($inventoryData) && $recordModel->get('storageid')) {
-			IStorages_Module_Model::setQtyInStock($recordModel->getModuleName(), $inventoryData, $recordModel->get('storageid'), $action);
+		if (!empty($inventoryData)) {
+			$storageId = $recordModel->get('storageid');
+			$storageIdOut = $recordModel->get('storageidout');
+	
+			if ($storageIdOut) {
+				// Move products from storageId to storageIdOut
+				IStorages_Module_Model::setQtyInStock($recordModel->getModuleName(), $inventoryData, $storageId, $action, '-');
+				IStorages_Module_Model::setQtyInStock($recordModel->getModuleName(), $inventoryData, $storageIdOut, $action, '+');
+			} elseif ($storageId) {
+				// Standard add or remove operation
+				IStorages_Module_Model::setQtyInStock($recordModel->getModuleName(), $inventoryData, $storageId, $action);
+			}
 		}
 	}
 
