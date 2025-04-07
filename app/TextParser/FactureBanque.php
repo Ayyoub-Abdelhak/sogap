@@ -38,6 +38,7 @@ class FactureBanque extends Base
         $html .= '<table border="1" cellpadding="0" cellspacing="0">';
         $html .= '<tr><td><br></td></tr>';
         $html .= '<tr><td><br></td></tr>';
+        $html .= '<tr><td><br></td></tr>';
         $html .= '<tr><td>';
 
         if ($bank === 'CFG') {
@@ -49,7 +50,7 @@ class FactureBanque extends Base
             $html .= '<strong>Compte n° : 007 780 0002625000000452 35</strong> <br>';
             $html .= '<strong>Swift : BCMAMAMC</strong> <br>';
         } else {
-            $html .= 'strong>BANQUE : BMCE BANK</strong> <br>';
+            $html .= '<strong>BANQUE : BMCE BANK</strong> <br>';
             $html .= '<strong>AGENCE : CENTRE AFF FAR</strong> <br>';
             $html .= '<strong>ADRESSE: 73 AV DES FAR 20000 / Casablanca</strong> <br>';
             $html .= '<strong>R.I.B N°: 011780000033210001037990 SWIFT: BMCEMAMC</strong> <br>';
