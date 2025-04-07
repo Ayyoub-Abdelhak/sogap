@@ -51,13 +51,13 @@ class FactureHeader extends Base
 
         // Row 3
         $fields = [
-            'number' => $account->get('number'),
-            'bc' => $account->get('bc'),
-            'br' => $account->get('br'),
-            'decompte' => $account->get('decompte'),
-            'attachement' => $account->get('attachement'),
-            'nmarche' => $account->get('nmarche'),
-            'naffaire' => $account->get('naffaire'),
+            'number' => $recordModel->get('number'),
+            'bc' => $recordModel->get('bc'),
+            'br' => $recordModel->get('br'),
+            'decompte' => $recordModel->get('decompte'),
+            'attachement' => $recordModel->get('attachement'),
+            'nmarche' => $recordModel->get('nmarche'),
+            'naffaire' => $recordModel->get('naffaire'),
         ];
 
         $html .= '<tr>';
@@ -87,7 +87,7 @@ class FactureHeader extends Base
 
         // Row 4
         $html .= '<tr>';
-        $html .= '<td colspan="2" style="text-align:left;padding:4px;border:1px solid black;"><b>Objet</b>:' . $account->get('subject') . '</td>';
+        $html .= '<td colspan="2" style="text-align:left;padding:4px;border:1px solid black;"><b>Objet</b>:' . $recordModel->get('subject') . '</td>';
         $html .= '</tr>';
 
         $html .= '</table>';
