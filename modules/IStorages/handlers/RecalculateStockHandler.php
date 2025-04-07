@@ -60,14 +60,17 @@ class IStorages_RecalculateStockHandler_Handler
 		if (!empty($inventoryData)) {
 			$storageId = $recordModel->get('storageid');
 			$storageIdOut = $recordModel->get('storageidout');
-	
-			if ($storageIdOut) {
+
+			if ($storageId && $storageIdOut) {
 				// Move products from storageId to storageIdOut
 				IStorages_Module_Model::setQtyInStock($recordModel->getModuleName(), $inventoryData, $storageId, $action, '-');
 				IStorages_Module_Model::setQtyInStock($recordModel->getModuleName(), $inventoryData, $storageIdOut, $action, '+');
 			} elseif ($storageId) {
 				// Standard add or remove operation
 				IStorages_Module_Model::setQtyInStock($recordModel->getModuleName(), $inventoryData, $storageId, $action);
+			} elseif ($storageIdOut) {
+				// Standard add or remove operation
+				IStorages_Module_Model::setQtyInStock($recordModel->getModuleName(), $inventoryData, $storageIdOut, $action);
 			}
 		}
 	}
