@@ -178,11 +178,11 @@ class ProductsTableFactureRGVersion extends Base
             $retenueGarantie = $totalHT * $retenueGarantiePercentage / 100;
             $totalRGHT = $totalHT - $retenueGarantie;
             $totalTVA = $totalRGHT * 0.2;
-            $totalTTC = $totalRGHT + $totalTVA;
+            $totalTTC = round($totalRGHT + $totalTVA, 2);
 
             $html .= '
 			<div style="padding: 0px 0px 0px 221px">
-				<table style="width:100%;font-size:8px;margin-top:15px;border:1px solid black;font-weight:bold;">
+				<table style="width:100%;font-size:8px;margin-top:15px;border-collapse:collapse;border:1px solid black;font-weight:bold;">
 					<tr>
 						<td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;border-bottom-style:solid;border-bottom-width:1px;">
 							TOTAL HT
