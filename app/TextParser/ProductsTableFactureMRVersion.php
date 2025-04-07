@@ -184,6 +184,18 @@ class ProductsTableFactureMRVersion extends Base
             }
             $html .= '</tr></tfoot></table>';
 
+            $html .= '
+			<div style="padding: 0px 0px 0px 221px">
+				<table style="width:100%;font-size:8px;margin-top:15px;border-collapse:collapse;border:1px solid black;font-weight:bold;">
+					<tr>
+						<td style="width:75%;text-align:center;border-right-style:solid;border:1px solid black;">
+							TOTAL HT
+						</td>
+						<td style="width: 25%;text-align:center;border-bottom-style:solid;border:1px solid black;">' . \CurrencyField::convertToUserFormat($ht, null, true) . '</td>
+					</tr>
+				</table>
+			</div>';
+
             $currency = \Vtiger_Util_Helper::is_decimal($ht) ? '' : ' DIRHAMS';
             $html .= '<div style="font-size:9px;margin-top:20px;"><b>ARRÊTÉE LA PRÉSENTE FACTURE À LA SOMME DE :</b><br /><b>' . \Vtiger_Util_Helper::int2str($ht) . $currency . ' HT</b></div>';
         }

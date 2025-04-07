@@ -87,7 +87,7 @@ class FactureHeader extends Base
 
         // Row 4
         $html .= '<tr>';
-        $html .= '<td colspan="2" style="text-align:left;padding:4px;border:1px solid black;"><b>Objet</b>:' . $recordModel->get('subject') . '</td>';
+        $html .= '<td colspan="2" style="text-align:left;padding:4px;border:1px solid black;"><b>Objet</b>: ' . $recordModel->get('subject') . '</td>';
         $html .= '</tr>';
 
         $html .= '</table>';
