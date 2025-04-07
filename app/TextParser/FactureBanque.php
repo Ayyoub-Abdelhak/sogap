@@ -35,7 +35,7 @@ class FactureBanque extends Base
         $recordModel = $this->textParser->recordModel;
         $bank = $recordModel->get('bank');
 
-        $html .= '<table border="1" cellpadding="0" cellspacing="0">';
+        $html .= '<table border="1" cellpadding="0" cellspacing="0" style="font-size: 8px;">';
         $html .= '<tr><td><br></td></tr>';
         $html .= '<tr><td><br></td></tr>';
         $html .= '<tr><td><br></td></tr>';

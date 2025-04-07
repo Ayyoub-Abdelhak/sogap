@@ -188,10 +188,10 @@ class ProductsTableFactureMRVersion extends Base
 			<div style="padding: 0px 0px 0px 221px">
 				<table style="width:100%;font-size:8px;margin-top:15px;border-collapse:collapse;border:1px solid black;font-weight:bold;">
 					<tr>
-						<td style="width:75%;text-align:center;border-right-style:solid;border:1px solid black;">
+						<td style="width:75%;text-align:center;border:1px solid black;">
 							TOTAL HT
 						</td>
-						<td style="width: 25%;text-align:center;border-bottom-style:solid;border:1px solid black;">' . \CurrencyField::convertToUserFormat($ht, null, true) . '</td>
+						<td style="width: 25%;text-align:center;border:1px solid black;">' . \CurrencyField::convertToUserFormat($ht, null, true) . '</td>
 					</tr>
 				</table>
 			</div>';
