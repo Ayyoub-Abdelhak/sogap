@@ -27,7 +27,7 @@ class IStorages_Module_Model extends Vtiger_Module_Model
 		}
 	}
 
-	public static function setQtyInStock(string $moduleName, array $data, int $storageId, string $action)
+	public static function setQtyInStock(string $moduleName, array $data, int $storageId, string $action, string $overrideOperator = null)
 	{
 		$db = App\Db::getInstance();
 		$qtyInStock = [];
@@ -37,7 +37,7 @@ class IStorages_Module_Model extends Vtiger_Module_Model
 			}
 			$qtyInStock[$product['name']] += $product['qty'];
 		}
-		$operator = self::getOperator($moduleName, $action);
+		$operator = $overrideOperator !== null ? $overrideOperator : self::getOperator($moduleName, $action);
 		// Update qtyinstock in Products
 		$expression = 'CASE ';
 		foreach ($qtyInStock as $id => $value) {
