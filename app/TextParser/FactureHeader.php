@@ -34,23 +34,23 @@ class FactureHeader extends Base
         $recordModel = $this->textParser->recordModel;
         $issueTime = \App\Fields\Date::formatToDisplay($recordModel->get('issue_time'));
         $html = '';
-        $html .= '<table class="custom-static-table" style="width:100%;font-size:8px;border-collapse:collapse;border:1px solid #ddd;">';
+        $html .= '<table class="custom-static-table" style="width:100%;font-size:8px;border-collapse:collapse;border:1px solid black;">';
 
         // Row 1 - Centered columns
         $html .= '<tr>';
-        $html .= '<td style="width:50%;text-align:center;padding:4px;border:1px solid #ddd;">Facture</td>';
-        $html .= '<td style="width:50%;text-align:center;padding:4px;border:1px solid #ddd;">' . $issueTime . '</td>';
+        $html .= '<td style="width:50%;text-align:center;padding:4px;border:1px solid black;font-size:15px;font-weight:bold;">Facture</td>';
+        $html .= '<td style="width:50%;text-align:center;padding:4px;border:1px solid black;">' . $issueTime . '</td>';
         $html .= '</tr>';
 
         // Row 2
         $html .= '<tr>';
-        $html .= '<td style="text-align:left;padding:4px;border:1px solid #ddd;">Left Text</td>';
-        $html .= '<td style="text-align:center;padding:4px;border:1px solid #ddd;">Centered Text</td>';
+        $html .= '<td style="text-align:left;padding:4px;border:1px solid black;">Left Text</td>';
+        $html .= '<td style="text-align:center;padding:4px;border:1px solid black;">Centered Text</td>';
         $html .= '</tr>';
 
         // Row 3
         $html .= '<tr>';
-        $html .= '<td colspan="2" style="padding:4px;border:1px solid #ddd;">';
+        $html .= '<td colspan="2" style="padding:4px;border:1px solid black;">';
         $html .= '<div style="display:inline-block;width:49%;vertical-align:top;text-align:left;">Line 1<br>Line 2<br>Line 3</div>';
         $html .= '<div style="display:inline-block;width:49%;vertical-align:top;text-align:right;">Line A<br>Line B<br>Line C</div>';
         $html .= '</td>';
@@ -58,7 +58,7 @@ class FactureHeader extends Base
 
         // Row 4
         $html .= '<tr>';
-        $html .= '<td colspan="2" style="text-align:left;padding:4px;border:1px solid #ddd;">Final Left-Aligned Text</td>';
+        $html .= '<td colspan="2" style="text-align:left;padding:4px;border:1px solid black;">Final Left-Aligned Text</td>';
         $html .= '</tr>';
 
         $html .= '</table>';
