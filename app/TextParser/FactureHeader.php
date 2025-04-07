@@ -50,7 +50,6 @@ class FactureHeader extends Base
         $html .= '</tr>';
 
         // Row 3
-
         $fields = [
             'number' => $account->get('number'),
             'bc' => $account->get('bc'),
@@ -60,32 +59,31 @@ class FactureHeader extends Base
             'nmarche' => $account->get('nmarche'),
             'naffaire' => $account->get('naffaire'),
         ];
-        if (array_filter($fields)) {
-            $html .= '<tr>';
-            $html .= '<td colspan="2" style="padding:4px;border:1px solid black;">';
-            $html .= '<div style="display:inline-block;width:49%;vertical-align:top;text-align:left;">';
-            if ($fields['number'])
-                $html .= '<b>Facture N°</b>: ' . $fields['number'] . '<br>';
-            if ($fields['bc'])
-                $html .= '<b>Bon Commande N°</b>: ' . $fields['bc'] . '<br>';
-            if ($fields['br'])
-                $html .= '<b>Bon de Reception N°</b>: ' . $fields['br'] . '<br>';
-            if ($fields['decompte'])
-                $html .= '<b>Décompte N°</b>: ' . $fields['decompte'];
-            $html .= '</div>';
 
-            $html .= '<div style="display:inline-block;width:49%;vertical-align:top;text-align:right;">';
-            if ($fields['attachement'])
-                $html .= '<b>Attachement N°</b>: ' . $fields['attachement'] . '<br>';
-            if ($fields['nmarche'])
-                $html .= '<b>Marché N°</b>: ' . $fields['nmarche'] . '<br>';
-            if ($fields['naffaire'])
-                $html .= '<b>Affaire N°</b>: ' . $fields['naffaire'];
-            $html .= '</div>';
+        $html .= '<tr>';
+        $html .= '<td colspan="2" style="padding:4px;border:1px solid black;">';
+        $html .= '<div style="display:inline-block;width:49%;vertical-align:top;text-align:left;">';
+        if ($fields['number'])
+            $html .= '<b>Facture N°</b>: ' . $fields['number'] . '<br>';
+        if ($fields['bc'])
+            $html .= '<b>Bon Commande N°</b>: ' . $fields['bc'] . '<br>';
+        if ($fields['br'])
+            $html .= '<b>Bon de Reception N°</b>: ' . $fields['br'] . '<br>';
+        if ($fields['decompte'])
+            $html .= '<b>Décompte N°</b>: ' . $fields['decompte'];
+        $html .= '</div>';
 
-            $html .= '</td>';
-            $html .= '</tr>';
-        }
+        $html .= '<div style="display:inline-block;width:49%;vertical-align:top;text-align:right;">';
+        if ($fields['attachement'])
+            $html .= '<b>Attachement N°</b>: ' . $fields['attachement'] . '<br>';
+        if ($fields['nmarche'])
+            $html .= '<b>Marché N°</b>: ' . $fields['nmarche'] . '<br>';
+        if ($fields['naffaire'])
+            $html .= '<b>Affaire N°</b>: ' . $fields['naffaire'];
+        $html .= '</div>';
+
+        $html .= '</td>';
+        $html .= '</tr>';
 
         // Row 4
         $html .= '<tr>';
