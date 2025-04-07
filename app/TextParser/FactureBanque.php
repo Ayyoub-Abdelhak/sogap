@@ -31,27 +31,33 @@ class FactureBanque extends Base
         if (!$this->textParser->recordModel->getModule()->isInventory()) {
             return $html;
         }
+
         $recordModel = $this->textParser->recordModel;
         $bank = $recordModel->get('bank');
-        $html = '';
-        $html .= '<br><br><strong>';
+
+        $html .= '<table border="1" cellpadding="0" cellspacing="0">';
+        $html .= '<tr><td><br></td></tr>';
+        $html .= '<tr><td><br></td></tr>';
+        $html .= '<tr><td>';
 
         if ($bank === 'CFG') {
-            $html .= 'Banque : CFG Bank - Agence Agence TPME <br>';
-            $html .= 'Compte n° : 050 780 004 0103990892001 50 <br>';
-            $html .= 'Swift : CAFGMAMC';
+            $html .= '<strong>Banque : CFG Bank - Agence Agence TPME</strong> <br>';
+            $html .= '<strong>Compte n° : 050 780 004 0103990892001 50</strong> <br>';
+            $html .= '<strong>Swift : CAFGMAMC</strong> <br>';
         } elseif ($bank === 'ATTIJARIWAFA') {
-            $html .= 'Banque : ATTIJARIWAFA BANK - Agence Ambassadeur Ben Aicha <br>';
-            $html .= 'Compte n° : 007 780 0002625000000452 35 <br>';
-            $html .= 'Swift : BCMAMAMC';
+            $html .= '<strong>Banque : ATTIJARIWAFA BANK - Agence Ambassadeur Ben Aicha</strong> <br>';
+            $html .= '<strong>Compte n° : 007 780 0002625000000452 35</strong> <br>';
+            $html .= '<strong>Swift : BCMAMAMC</strong> <br>';
         } else {
-            $html .= 'BANQUE : BMCE BANK <br>';
-            $html .= 'AGENCE : CENTRE AFF FAR <br>';
-            $html .= 'ADRESSE: 73 AV DES FAR 20000 / Casablanca <br>';
-            $html .= 'R.I.B N°: 011780000033210001037990 <br>';
-            $html .= 'SWIFT: BMCEMAMC';
+            $html .= 'strong>BANQUE : BMCE BANK</strong> <br>';
+            $html .= '<strong>AGENCE : CENTRE AFF FAR</strong> <br>';
+            $html .= '<strong>ADRESSE: 73 AV DES FAR 20000 / Casablanca</strong> <br>';
+            $html .= '<strong>R.I.B N°: 011780000033210001037990 SWIFT: BMCEMAMC</strong> <br>';
         }
-        $html .= '</strong>';
+
+        $html .= '</td></tr>';
+        $html .= '</table>';
+
         return $html;
     }
 }
