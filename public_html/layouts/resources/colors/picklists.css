@@ -82,6 +82,26 @@
 .picklistCT_OSSTimeControl_timecontrol_type_PLL_SICK_LEAVE { color: #9900FF !important; }
 .picklistCBg_OSSTimeControl_timecontrol_type_PLL_SICK_LEAVE { background: #9900FF !important; font-weight: 500 !important; color: white !important;}
 .picklistLb_OSSTimeControl_timecontrol_type_PLL_SICK_LEAVE { background: #9900FF !important; font-weight: 500 !important; color: white !important;  padding: 2px 7px 3px 7px;}
+.picklistCBr_OSSEmployees_societe_Sogap { border-color: #0D47A1 !important; }
+.picklistCT_OSSEmployees_societe_Sogap { color: #0D47A1 !important; }
+.picklistCBg_OSSEmployees_societe_Sogap { background: #0D47A1 !important; font-weight: 500 !important; color: white !important;}
+.picklistLb_OSSEmployees_societe_Sogap { background: #0D47A1 !important; font-weight: 500 !important; color: white !important;  padding: 2px 7px 3px 7px;}
+.picklistCBr_OSSEmployees_societe_Spin { border-color: #FFD54F !important; }
+.picklistCT_OSSEmployees_societe_Spin { color: #FFD54F !important; }
+.picklistCBg_OSSEmployees_societe_Spin { background: #FFD54F !important; font-weight: 500 !important; color: black !important;}
+.picklistLb_OSSEmployees_societe_Spin { background: #FFD54F !important; font-weight: 500 !important; color: black !important;  padding: 2px 7px 3px 7px;}
+.picklistCBr_OSSEmployees_societe_SSM { border-color: #795548 !important; }
+.picklistCT_OSSEmployees_societe_SSM { color: #795548 !important; }
+.picklistCBg_OSSEmployees_societe_SSM { background: #795548 !important; font-weight: 500 !important; color: white !important;}
+.picklistLb_OSSEmployees_societe_SSM { background: #795548 !important; font-weight: 500 !important; color: white !important;  padding: 2px 7px 3px 7px;}
+.picklistCBr_OSSEmployees_start_actif_inactif_Actif { border-color: #4CAF50 !important; }
+.picklistCT_OSSEmployees_start_actif_inactif_Actif { color: #4CAF50 !important; }
+.picklistCBg_OSSEmployees_start_actif_inactif_Actif { background: #4CAF50 !important; font-weight: 500 !important; color: black !important;}
+.picklistLb_OSSEmployees_start_actif_inactif_Actif { background: #4CAF50 !important; font-weight: 500 !important; color: black !important;  padding: 2px 7px 3px 7px;}
+.picklistCBr_OSSEmployees_start_actif_inactif_Inactif { border-color: #F44336 !important; }
+.picklistCT_OSSEmployees_start_actif_inactif_Inactif { color: #F44336 !important; }
+.picklistCBg_OSSEmployees_start_actif_inactif_Inactif { background: #F44336 !important; font-weight: 500 !important; color: white !important;}
+.picklistLb_OSSEmployees_start_actif_inactif_Inactif { background: #F44336 !important; font-weight: 500 !important; color: white !important;  padding: 2px 7px 3px 7px;}
 .picklistCBr_SQuotes_squotes_status_PLL_DRAFT { border-color: #90A4AE !important; }
 .picklistCT_SQuotes_squotes_status_PLL_DRAFT { color: #90A4AE !important; }
 .picklistCBg_SQuotes_squotes_status_PLL_DRAFT { background: #90A4AE !important; font-weight: 500 !important; color: black !important;}
