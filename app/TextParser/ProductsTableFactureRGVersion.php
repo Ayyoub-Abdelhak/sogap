@@ -225,10 +225,10 @@ class ProductsTableFactureRGVersion extends Base
             }
             $html .= '
 					<tr>
-						<td style="width:75%;text-align:center;border-right-style:solid;border-right-width:1px;">
+						<td style="width:75%;text-align:center;border-right-style:solid;border:1px solid black;">
 							TOTAL TTC
 						</td>
-						<td style="width: 25%;text-align:center;">' . \CurrencyField::convertToUserFormat($totalTTC, null, true) . '</td>
+						<td style="width: 25%;text-align:center;border:1px solid black;">' . \CurrencyField::convertToUserFormat($totalTTC, null, true) . '</td>
 					</tr>
 				</table>
 			</div>';
