@@ -21,8 +21,9 @@ class ProductsTableEntreeVersion extends Base
 		if (!$this->textParser->recordModel->getModule()->isInventory()) {
 			return $html;
 		}
+		$recordModel = $this->textParser->recordModel;
 		$inventory = \Vtiger_Inventory_Model::getInstance($this->textParser->moduleName);
-		$inventoryRows = $this->textParser->recordModel->getInventoryData();
+		$inventoryRows = $recordModel->getInventoryData();
 
 		// Updated styling with a border around the entire table
 		$headerStyle = 'font-size:9px;border:1px solid black;border-bottom:0px;padding:0px 4px;text-align:center;background-color:#D9E1F2;';

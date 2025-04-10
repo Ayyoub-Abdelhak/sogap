@@ -21,8 +21,9 @@ class ProductsTableSortieVersion extends Base
 		if (!$this->textParser->recordModel->getModule()->isInventory()) {
 			return $html;
 		}
+		$recordModel = $this->textParser->recordModel;
 		$inventory = \Vtiger_Inventory_Model::getInstance($this->textParser->moduleName);
-		$inventoryRows = $this->textParser->recordModel->getInventoryData();
+		$inventoryRows = $recordModel->getInventoryData();
 
 		// Updated styling with a border around the entire table
 		$headerStyle = 'font-size:9px;border:1px solid black;border-bottom:0px;padding:0px 4px;text-align:center;background-color:#D9E1F2;';
@@ -114,12 +115,12 @@ class ProductsTableSortieVersion extends Base
 		$html .= '</tbody></table>';
 
 		// Retrieve fields for the additional 3-block table
-		$expName = $this->textParser->recordModel->get('nom_expediteur');
-		$expLieu = $this->textParser->recordModel->get('lieu_expediteur');
-		$transName = $this->textParser->recordModel->get('nom_transporteur');
-		$transLieu = $this->textParser->recordModel->get('lieu_transporteur');
-		$destName = $this->textParser->recordModel->get('nom_destinataire');
-		$destLieu = $this->textParser->recordModel->get('lieu_destinataire');
+		$expName = $recordModel->get('nom_expediteur');
+		$expLieu = $recordModel->get('lieu_expediteur');
+		$transName = $recordModel->get('nom_transporteur');
+		$transLieu = $recordModel->get('lieu_transporteur');
+		$destName = $recordModel->get('nom_destinataire');
+		$destLieu = $recordModel->get('lieu_destinataire');
 
 		// Add the 3-column table at the end
 		$html .= '<table style="width:100%;font-size:8px;border-collapse:collapse;margin-top:25px;">

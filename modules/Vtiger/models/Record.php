@@ -461,6 +461,21 @@ class Vtiger_Record_Model extends \App\Base
 		return $field->getUITypeModel()->getListViewDisplayValue($this->get($field->getName()), $this->getId(), $this, $rawText);
 	}
 
+	public function getRelatedStorages(): array
+	{
+		$productId = $this->getId();
+
+		$query = (new \App\Db\Query())
+			->select(['s.subject', 'p.qtyinstock'])
+			->from(['p' => 'u_yf_istorages_products'])
+			->innerJoin(['s' => 'u_yf_istorages'], 'p.crmid = s.istorageid')
+			->where(['p.relcrmid' => $productId])
+			->andWhere(['>', 'p.qtyinstock', 0])
+			->orderBy(['p.qtyinstock' => SORT_DESC]);
+
+		return $query->all(); // returns array of ['subject' => ..., 'qtyinstock' => ...]
+	}
+
 	/**
 	 * Function to get the display value in Tiles.
 	 *

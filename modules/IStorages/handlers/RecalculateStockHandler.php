@@ -26,7 +26,7 @@ class IStorages_RecalculateStockHandler_Handler
 			$relatedModuleRecordId = $recordModel->get($relatedModuleField);
 			$relatedModuleRecordModel = Vtiger_Record_Model::getInstanceById($relatedModuleRecordId);
 		}
-		if ('PLL_ACCEPTED' === $recordModel->get($status)) {
+		if ('PLL_ACCEPTED' === $recordModel->get($status) || $moduleName === 'SVendorEnquiries') {
 			if (isset($correctionModules[$moduleName])) {
 				$this->updateStock($relatedModuleRecordModel, 'remove');
 			}
