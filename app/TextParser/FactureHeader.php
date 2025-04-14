@@ -46,7 +46,7 @@ class FactureHeader extends Base
         // Row 2
         $html .= '<tr>';
         $html .= '<td style="text-align:left;padding:4px;border:1px solid black;">CASABLANCA, le ' . $issueTime . '</td>';
-        $html .= '<td style="text-align:center;padding:4px;border:1px solid black;">ICE ' . $account->get('description') . '</td>';
+        $html .= '<td style="text-align:center;padding:4px;border:1px solid black;">ICE ' . $account->get('ice') . '</td>';
         $html .= '</tr>';
 
         // Row 3
@@ -58,6 +58,7 @@ class FactureHeader extends Base
             'attachement' => $recordModel->get('attachement'),
             'nmarche' => $recordModel->get('nmarche'),
             'naffaire' => $recordModel->get('naffaire'),
+            'ndr' => $recordModel->get('ndr'),
         ];
 
         $html .= '<tr>';
@@ -78,6 +79,8 @@ class FactureHeader extends Base
             $html .= '<b>Attachement N°</b>: ' . $fields['attachement'] . '<br>';
         if ($fields['nmarche'])
             $html .= '<b>Marché N°</b>: ' . $fields['nmarche'] . '<br>';
+        if ($fields['ndr'])
+            $html .= '<b>NDR N°</b>: ' . $fields['ndr'] . '<br>';
         if ($fields['naffaire'])
             $html .= '<b>Affaire N°</b>: ' . $fields['naffaire'];
         $html .= '</div>';

@@ -232,9 +232,9 @@ class ProductsTableDevisVersion extends Base
 					</tr>
 				</table>
 			</div>';
-
+			$type = $this->textParser->recordModel->get('type') === 'Devis' ? 'DEVIS' : 'BORDEREAU DES PRIX';
 			$currency = \Vtiger_Util_Helper::is_decimal($ttc) ? '' : ' DIRHAMS';
-			$html .= '<div style="font-size:9px;margin-top:20px;"><b>ARRÊTÉ LE PRÉSENT DEVIS À LA SOMME DE :</b><br /><b>' . \Vtiger_Util_Helper::int2str($ttc) . $currency . ' TTC</b></div>';
+			$html .= '<div style="font-size:9px;margin-top:20px;"><b>ARRÊTÉ LE PRÉSENT ' . $type . ' À LA SOMME DE :</b><br /><b>' . \Vtiger_Util_Helper::int2str($ttc) . $currency . ' TTC</b></div>';
 			if ($this->textParser->recordModel->get('validite') != '') {
 				$html .= '<div style="font-size:8px;margin-top:10px;"><b>Validité de l\'offre : ' . $this->textParser->recordModel->get('validite') . '</b></div>';
 			}
