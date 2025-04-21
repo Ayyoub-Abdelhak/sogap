@@ -90,10 +90,11 @@ class ProductsTableDevisVersion extends Base
 		}
 		$ttc = round($ttc, 2);
 
-		$fieldTypes = ['Name', 'Value', 'Quantity', 'UnitPrice', 'TotalPrice'];
+		$fieldTypes = ['Name', 'Value', 'Quantity', 'UnitPrice'];
 		if ($discount > 0 && !$discountModeIsGroup) {
 			$fieldTypes[] = 'Discount';
 		}
+		$fieldTypes[] = 'TotalPrice';
 		foreach ($fieldTypes as $fieldType) {
 			foreach ($inventory->getFieldsByType($fieldType) as $fieldModel) {
 				$columnName = $fieldModel->getColumnName();

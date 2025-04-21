@@ -80,7 +80,7 @@ class FactureHeader extends Base
         if ($fields['nmarche'])
             $html .= '<b>Marché N°</b>: ' . $fields['nmarche'] . '<br>';
         if ($fields['ndr'])
-            $html .= '<b>NDR N°</b>: ' . $fields['ndr'] . '<br>';
+            $html .= '<b>MDR N°</b>: ' . $fields['ndr'] . '<br>';
         if ($fields['naffaire'])
             $html .= '<b>Affaire N°</b>: ' . $fields['naffaire'];
         $html .= '</div>';
