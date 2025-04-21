@@ -63,7 +63,7 @@ class FactureHeader extends Base
 
         $html .= '<tr>';
         $html .= '<td colspan="2" style="padding:4px;border:1px solid black;">';
-        $html .= '<div style="display:inline-block;width:49%;vertical-align:top;text-align:left;">';
+        $html .= '<div style="display:inline-block;width:51%;vertical-align:top;text-align:left;">';
         if ($fields['number'])
             $html .= '<b>Facture N°</b>: ' . $fields['number'] . '<br>';
         if ($fields['bc'])
