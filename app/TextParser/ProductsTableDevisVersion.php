@@ -94,7 +94,7 @@ class ProductsTableDevisVersion extends Base
 		if ($discount > 0 && !$discountModeIsGroup) {
 			$fieldTypes[] = 'Discount';
 		}
-		$fieldTypes[] = 'TotalPrice';
+		$fieldTypes[] = 'NetPrice';
 		foreach ($fieldTypes as $fieldType) {
 			foreach ($inventory->getFieldsByType($fieldType) as $fieldModel) {
 				$columnName = $fieldModel->getColumnName();
@@ -106,7 +106,7 @@ class ProductsTableDevisVersion extends Base
 					$headerName = 'Un.';
 				if ($typeName == 'UnitPrice')
 					$headerName = 'Prix U. HT';
-				if ($typeName == 'TotalPrice')
+				if ($typeName == 'NetPrice')
 					$headerName = 'Prix Total HT';
 				if (!$fieldModel->isVisible()) {
 					continue;
@@ -165,7 +165,7 @@ class ProductsTableDevisVersion extends Base
 									$lines--;
 								}
 							}
-						} elseif (\in_array($typeName, ['GrossPrice', 'UnitPrice', 'TotalPrice', 'Discount']) && !empty($currencySymbol)) {
+						} elseif (\in_array($typeName, ['GrossPrice', 'UnitPrice', 'NetPrice', 'Discount']) && !empty($currencySymbol)) {
 							$fieldValue = \CurrencyField::appendCurrencySymbol($fieldModel->getDisplayValue($itemValue, $inventoryRow), $currencySymbol);
 							$fieldStyle = $bodyStyle . 'text-align:right;white-space: nowrap;';
 						} else {
@@ -197,7 +197,7 @@ class ProductsTableDevisVersion extends Base
 						<td style="width:75%;text-align:center;border:1px solid black;">
 							TOTAL HT
 						</td>
-						<td style="width: 25%;text-align:center;border:1px solid black;">' . \CurrencyField::convertToUserFormat($ht, null, true) . '</td>
+						<td style="width: 25%;text-align:center;border:1px solid black;">' . \CurrencyField::convertToUserFormat($discountModeIsGroup ? $ht : $ht - $discount, null, true) . '</td>
 					</tr>';
 			if ($discount > 0 && $discountModeIsGroup) {
 				$html .= '
