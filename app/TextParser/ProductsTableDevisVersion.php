@@ -199,7 +199,7 @@ class ProductsTableDevisVersion extends Base
 						</td>
 						<td style="width: 25%;text-align:center;border:1px solid black;">' . \CurrencyField::convertToUserFormat($ht, null, true) . '</td>
 					</tr>';
-			if ($discount > 0) {
+			if ($discount > 0 && $discountModeIsGroup) {
 				$html .= '
 				<tr>
 					<td style="width:75%;text-align:center;border:1px solid black;">
