@@ -173,6 +173,9 @@ class ProductsTableDevisVersion extends Base
 						}
 						$fieldValue = in_array($fieldValue, ['0', '0.00 DH', '0 DH', 'nan']) ? '' : $fieldValue;
 						$fieldValue = str_replace("DH", "", $fieldValue);
+						if($typeName === 'Quantity') {
+							$fieldValue = str_replace(".00", "", $fieldValue);
+						}
 						$html .= "<td class=\"col-type-{$typeName}\" style=\"{$fieldStyle}\">" . $fieldValue . '</td>';
 					}
 				}
