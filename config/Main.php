@@ -30,6 +30,7 @@ class Main
 	// public static $site_URL = 'http://localhost/yetiforce/';
 	// public static $site_URL = 'http://sogap.crm/';
 	public static $site_URL = 'http://192.168.1.245/';
+	// public static $site_URL = 'http://100.127.144.29/';
 
 	/** Cache directory path */
 	public static $cache_dir = 'cache/';

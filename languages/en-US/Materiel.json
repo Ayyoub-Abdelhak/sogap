@@ -1,0 +1,9 @@
+{
+	"php": {
+		"Materiel": "Matériel",
+		"SINGLE_Materiel": "Matériel",
+		"LBL_CUSTOM_INFORMATION": "Custom Information",
+		"LBL_BASIC_INFORMATION": "Basic Information",
+		"Nom": "Nom"
+	}
+}
