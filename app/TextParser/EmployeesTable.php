@@ -29,11 +29,11 @@ class EmployeesTable extends Base
     {
         $html = '';
         $recordModel = $this->textParser->recordModel;
-
+        
         // Get employee data
         $employeeId = $recordModel->getId();
         $employee = $this->getEmployeeData($employeeId);
-
+        
         if (!$employee) {
             return '<p>Aucune donnée employé trouvée.</p>';
         }
@@ -44,7 +44,7 @@ class EmployeesTable extends Base
         $diplomes = $this->getDiplomes($employeeId);
 
         $html = $this->generateModernCV($employee, $formations, $experiences, $diplomes);
-
+        
         return $html;
     }
 
@@ -55,28 +55,14 @@ class EmployeesTable extends Base
     {
         $query = (new \App\Db\Query())
             ->select([
-                'name',
-                'last_name',
-                'business_phone',
-                'private_phone',
-                'business_mail',
-                'private_mail',
-                'street',
-                'code',
-                'city',
-                'position',
-                'date_de_naissance',
-                'lieu_de_naissance',
-                'situation_familiale',
-                'qualifications',
-                'qualificationss',
-                'date_embauche',
-                'poste',
-                'pic'
+                'name', 'last_name', 'business_phone', 'private_phone', 'business_mail', 
+                'private_mail', 'street', 'code', 'city', 'position', 'date_de_naissance', 
+                'lieu_de_naissance', 'situation_familiale', 'qualifications', 'qualificationss',
+                'date_embauche', 'poste', 'pic'
             ])
             ->from('vtiger_ossemployees')
             ->where(['ossemployeesid' => $employeeId]);
-
+            
         return $query->one();
     }
 
@@ -90,7 +76,7 @@ class EmployeesTable extends Base
             ->from('u_yf_formation')
             ->where(['employee' => $employeeId])
             ->orderBy(['date' => SORT_DESC]);
-
+            
         return $query->all();
     }
 
@@ -104,7 +90,7 @@ class EmployeesTable extends Base
             ->from('u_yf_expriencespro')
             ->where(['employe' => $employeeId])
             ->orderBy(['periode' => SORT_DESC]);
-
+            
         return $query->all();
     }
 
@@ -117,7 +103,7 @@ class EmployeesTable extends Base
         // You can modify this if you have a separate diplomes table
         $employee = $this->getEmployeeData($employeeId);
         $diplomes = [];
-
+        
         if (!empty($employee['qualifications'])) {
             $diplomes[] = [
                 'titre' => $employee['qualifications'],
@@ -125,7 +111,7 @@ class EmployeesTable extends Base
                 'annee' => ''
             ];
         }
-
+        
         if (!empty($employee['qualificationss'])) {
             $diplomes[] = [
                 'titre' => $employee['qualificationss'],
@@ -133,12 +119,30 @@ class EmployeesTable extends Base
                 'annee' => ''
             ];
         }
-
+        
         return $diplomes;
     }
 
     /**
-     * Generate modern CV HTML
+     * Get image path from JSON stored data
+     */
+    private function getImagePath($picData)
+    {
+        if (empty($picData)) {
+            return null;
+        }
+        
+        $imageData = json_decode($picData, true);
+        if (is_array($imageData) && !empty($imageData[0]['path'])) {
+            // Construct the full path - adjust base URL as needed
+            return $imageData[0]['path'];
+        }
+        
+        return null;
+    }
+
+    /**
+     * Generate modern CV HTML compatible with YetiForce PDF
      */
     private function generateModernCV($employee, $formations, $experiences, $diplomes)
     {
@@ -146,84 +150,98 @@ class EmployeesTable extends Base
         $phone = $employee['business_phone'] ?: $employee['private_phone'];
         $email = $employee['business_mail'] ?: $employee['private_mail'];
         $address = trim($employee['street'] . ' ' . $employee['code'] . ' ' . $employee['city']);
-
-        $html = '<div style="font-family: \'Segoe UI\', Tahoma, Geneva, Verdana, sans-serif; color: #333; line-height: 1.6; max-width: 800px; margin: 0 auto;">';
-
-        // Header Section with gradient background
-        $html .= '<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px 30px; text-align: center; border-radius: 15px 15px 0 0; margin-bottom: 0;">';
-
-        // Profile image placeholder
-        if (!empty($employee['pic'])) {
-            $html .= '<div style="width: 120px; height: 120px; border-radius: 50%; background: white; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 25px rgba(0,0,0,0.15);">';
-            $html .= '<img src="' . $employee['pic'] . '" style="width: 110px; height: 110px; border-radius: 50%; object-fit: cover;" />';
-            $html .= '</div>';
+        
+        // Get image path
+        $imagePath = $this->getImagePath($employee['pic']);
+        
+        $html = '<div style="font-family: Arial, sans-serif; color: #333; line-height: 1.4; font-size: 11px;">';
+        
+        // Header Section - using table for better PDF compatibility
+        $html .= '<table style="width: 100%; border-collapse: collapse; background-color: #667eea; color: white; margin-bottom: 15px;">';
+        $html .= '<tr>';
+        
+        // Profile section
+        $html .= '<td style="width: 25%; text-align: center; padding: 20px; vertical-align: middle;">';
+        if ($imagePath) {
+            $html .= '<img src="' . $imagePath . '" style="width: 80px; height: 80px; border: 2px solid white;" /><br>';
         } else {
-            $html .= '<div style="width: 120px; height: 120px; border-radius: 50%; background: rgba(255,255,255,0.2); margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 48px; font-weight: bold;">';
+            $html .= '<div style="width: 80px; height: 80px; background-color: white; color: #667eea; text-align: center; line-height: 80px; font-size: 28px; font-weight: bold; margin: 0 auto;">';
             $html .= strtoupper(substr($employee['name'], 0, 1) . substr($employee['last_name'], 0, 1));
-            $html .= '</div>';
+            $html .= '</div><br>';
         }
-
-        $html .= '<h1 style="margin: 0 0 10px 0; font-size: 32px; font-weight: 700; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">' . $fullName . '</h1>';
-        $html .= '<h2 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 300; opacity: 0.9;">' . ($employee['position'] ?: $employee['poste']) . '</h2>';
-
-        // Contact info with icons
-        $html .= '<div style="display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; margin-top: 20px;">';
+        $html .= '</td>';
+        
+        // Name and contact info
+        $html .= '<td style="width: 75%; padding: 20px; vertical-align: middle;">';
+        $html .= '<h1 style="margin: 0 0 8px 0; font-size: 22px; font-weight: bold;">' . $fullName . '</h1>';
+        $html .= '<h2 style="margin: 0 0 15px 0; font-size: 14px; font-weight: normal;">' . ($employee['position'] ?: $employee['poste']) . '</h2>';
+        
         if ($phone) {
-            $html .= '<div style="display: flex; align-items: center; gap: 8px;"><span style="font-size: 14px;">📞</span> <span>' . $phone . '</span></div>';
+            $html .= '<div style="margin: 3px 0; font-size: 11px;"><strong>Téléphone:</strong> ' . $phone . '</div>';
         }
         if ($email) {
-            $html .= '<div style="display: flex; align-items: center; gap: 8px;"><span style="font-size: 14px;">✉️</span> <span>' . $email . '</span></div>';
+            $html .= '<div style="margin: 3px 0; font-size: 11px;"><strong>Email:</strong> ' . $email . '</div>';
         }
         if ($address) {
-            $html .= '<div style="display: flex; align-items: center; gap: 8px;"><span style="font-size: 14px;">📍</span> <span>' . $address . '</span></div>';
+            $html .= '<div style="margin: 3px 0; font-size: 11px;"><strong>Adresse:</strong> ' . $address . '</div>';
         }
-        $html .= '</div>';
-        $html .= '</div>';
-
-        // Main content area
-        $html .= '<div style="background: white; padding: 40px 30px; border-radius: 0 0 15px 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.1);">';
+        $html .= '</td>';
+        $html .= '</tr>';
+        $html .= '</table>';
 
         // Personal Info Section
-        $html .= '<div style="margin-bottom: 35px;">';
-        $html .= '<h3 style="color: #667eea; font-size: 20px; font-weight: 600; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 3px solid #667eea; display: inline-block;">👤 INFORMATIONS PERSONNELLES</h3>';
-        $html .= '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;">';
-
+        $html .= '<div style="margin-bottom: 20px; padding: 15px; background-color: #f8f9fa; border-left: 4px solid #667eea;">';
+        $html .= '<h3 style="color: #667eea; font-size: 14px; font-weight: bold; margin: 0 0 10px 0; padding-left: 0;">INFORMATIONS PERSONNELLES</h3>';
+        
+        $html .= '<table style="width: 100%; border-collapse: collapse; font-size: 10px;">';
+        $html .= '<tr>';
+        $html .= '<td style="width: 50%; padding: 3px; vertical-align: top; padding-left: 0;">';
         if ($employee['date_de_naissance']) {
-            $html .= '<div><strong>Date de naissance:</strong> ' . \App\Fields\Date::formatToDisplay($employee['date_de_naissance']) . '</div>';
+            $html .= '<div style="margin-bottom: 5px; padding-left: 0;"><strong>Date de naissance:</strong> ' . \App\Fields\Date::formatToDisplay($employee['date_de_naissance']) . '</div>';
         }
         if ($employee['lieu_de_naissance']) {
-            $html .= '<div><strong>Lieu de naissance:</strong> ' . $employee['lieu_de_naissance'] . '</div>';
+            $html .= '<div style="margin-bottom: 5px; padding-left: 0;"><strong>Lieu de naissance:</strong> ' . $employee['lieu_de_naissance'] . '</div>';
         }
+        $html .= '</td>';
+        $html .= '<td style="width: 50%; padding: 3px; vertical-align: top; padding-left: 0;">';
         if ($employee['situation_familiale']) {
-            $html .= '<div><strong>Situation familiale:</strong> ' . $employee['situation_familiale'] . '</div>';
+            $html .= '<div style="margin-bottom: 5px; padding-left: 0;"><strong>Situation familiale:</strong> ' . $employee['situation_familiale'] . '</div>';
         }
         if ($employee['date_embauche']) {
-            $html .= '<div><strong>Date d\'embauche:</strong> ' . \App\Fields\Date::formatToDisplay($employee['date_embauche']) . '</div>';
+            $html .= '<div style="margin-bottom: 5px; padding-left: 0;"><strong>Date d\'embauche:</strong> ' . \App\Fields\Date::formatToDisplay($employee['date_embauche']) . '</div>';
         }
-
-        $html .= '</div>';
+        $html .= '</td>';
+        $html .= '</tr>';
+        $html .= '</table>';
         $html .= '</div>';
 
         // Experience Section
         if (!empty($experiences)) {
-            $html .= '<div style="margin-bottom: 35px;">';
-            $html .= '<h3 style="color: #667eea; font-size: 20px; font-weight: 600; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 3px solid #667eea; display: inline-block;">💼 EXPÉRIENCES PROFESSIONNELLES</h3>';
-
+            $html .= '<div style="margin-bottom: 20px;">';
+            $html .= '<h3 style="color: #667eea; font-size: 14px; font-weight: bold; margin: 0 0 10px 0; padding-bottom: 3px; border-bottom: 2px solid #667eea; padding-left: 0;">EXPÉRIENCES PROFESSIONNELLES</h3>';
+            
             foreach ($experiences as $exp) {
-                $html .= '<div style="margin-bottom: 25px; padding: 20px; background: #f8f9ff; border-radius: 10px; border-left: 4px solid #667eea;">';
-                $html .= '<div style="display: flex; justify-content: between; align-items: flex-start; margin-bottom: 10px;">';
-                $html .= '<h4 style="color: #333; font-size: 16px; font-weight: 600; margin: 0;">' . $exp['poste'] . '</h4>';
+                $html .= '<div style="margin-bottom: 12px; padding: 10px; background-color: #f8f9ff; border-left: 3px solid #667eea;">';
+                
+                $html .= '<table style="width: 100%; border-collapse: collapse;">';
+                $html .= '<tr>';
+                $html .= '<td style="width: 70%; vertical-align: top; padding-left: 0;">';
+                $html .= '<h4 style="color: #333; font-size: 12px; font-weight: bold; margin: 0 0 3px 0; padding-left: 0;">' . $exp['poste'] . '</h4>';
+                $html .= '</td>';
+                $html .= '<td style="width: 30%; text-align: right; vertical-align: top; padding-left: 0;">';
                 if ($exp['periode']) {
-                    $html .= '<span style="background: #667eea; color: white; padding: 4px 12px; border-radius: 15px; font-size: 12px; font-weight: 500; margin-left: auto;">' . $exp['periode'] . '</span>';
+                    $html .= '<span style="background-color: #667eea; color: white; padding: 2px 6px; font-size: 9px;">' . $exp['periode'] . '</span>';
                 }
-                $html .= '</div>';
-
+                $html .= '</td>';
+                $html .= '</tr>';
+                $html .= '</table>';
+                
                 if ($exp['entite']) {
-                    $html .= '<p style="color: #667eea; font-weight: 500; margin: 5px 0;"><strong>' . $exp['entite'] . '</strong></p>';
+                    $html .= '<p style="color: #667eea; font-weight: bold; margin: 3px 0; font-size: 11px; padding-left: 0;">' . $exp['entite'] . '</p>';
                 }
-
+                
                 if ($exp['principales_ref']) {
-                    $html .= '<p style="color: #666; margin: 10px 0 0 0; line-height: 1.5;">' . $exp['principales_ref'] . '</p>';
+                    $html .= '<p style="color: #666; margin: 5px 0 0 0; font-size: 10px; line-height: 1.3; padding-left: 0;">' . $exp['principales_ref'] . '</p>';
                 }
                 $html .= '</div>';
             }
@@ -232,34 +250,40 @@ class EmployeesTable extends Base
 
         // Formation Section
         if (!empty($formations)) {
-            $html .= '<div style="margin-bottom: 35px;">';
-            $html .= '<h3 style="color: #667eea; font-size: 20px; font-weight: 600; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 3px solid #667eea; display: inline-block;">🎓 FORMATIONS</h3>';
-
+            $html .= '<div style="margin-bottom: 20px;">';
+            $html .= '<h3 style="color: #667eea; font-size: 14px; font-weight: bold; margin: 0 0 10px 0; padding-bottom: 3px; border-bottom: 2px solid #667eea; padding-left: 0;">FORMATIONS</h3>';
+            
             foreach ($formations as $formation) {
-                $html .= '<div style="margin-bottom: 20px; padding: 18px; background: #f0f7ff; border-radius: 10px; border-left: 4px solid #4dabf7;">';
-                $html .= '<div style="display: flex; justify-content: between; align-items: flex-start; margin-bottom: 8px;">';
-                $html .= '<h4 style="color: #333; font-size: 15px; font-weight: 600; margin: 0;">' . $formation['thme'] . '</h4>';
+                $html .= '<div style="margin-bottom: 10px; padding: 8px; background-color: #f0f7ff; border-left: 3px solid #4dabf7;">';
+                
+                $html .= '<table style="width: 100%; border-collapse: collapse;">';
+                $html .= '<tr>';
+                $html .= '<td style="width: 70%; vertical-align: top; padding-left: 0;">';
+                $html .= '<h4 style="color: #333; font-size: 11px; font-weight: bold; margin: 0 0 3px 0; padding-left: 0;">' . $formation['thme'] . '</h4>';
+                $html .= '</td>';
+                $html .= '<td style="width: 30%; text-align: right; vertical-align: top; padding-left: 0;">';
                 if ($formation['date']) {
-                    $html .= '<span style="background: #4dabf7; color: white; padding: 3px 10px; border-radius: 12px; font-size: 11px; margin-left: auto;">' . \App\Fields\Date::formatToDisplay($formation['date']) . '</span>';
+                    $html .= '<span style="background-color: #4dabf7; color: white; padding: 1px 4px; font-size: 9px;">' . \App\Fields\Date::formatToDisplay($formation['date']) . '</span>';
                 }
-                $html .= '</div>';
-
+                $html .= '</td>';
+                $html .= '</tr>';
+                $html .= '</table>';
+                
                 if ($formation['organismedeform']) {
-                    $html .= '<p style="color: #4dabf7; font-weight: 500; margin: 5px 0;"><strong>' . $formation['organismedeform'] . '</strong></p>';
+                    $html .= '<p style="color: #4dabf7; font-weight: bold; margin: 3px 0; font-size: 10px; padding-left: 0;">' . $formation['organismedeform'] . '</p>';
                 }
-
-                $html .= '<div style="display: flex; gap: 20px; margin-top: 8px; font-size: 13px; color: #666;">';
+                
+                $html .= '<table style="width: 100%; border-collapse: collapse; margin-top: 5px;">';
+                $html .= '<tr>';
                 if ($formation['duree']) {
-                    $html .= '<span><strong>Durée:</strong> ' . $formation['duree'] . '</span>';
+                    $html .= '<td style="width: 50%; font-size: 9px; color: #666; padding-left: 0;"><strong>Durée:</strong> ' . $formation['duree'] . '</td>';
                 }
                 if ($formation['typedeform']) {
-                    $html .= '<span><strong>Type:</strong> ' . $formation['typedeform'] . '</span>';
+                    $html .= '<td style="width: 50%; font-size: 9px; color: #666; padding-left: 0;"><strong>Type:</strong> ' . $formation['typedeform'] . '</td>';
                 }
-                $html .= '</div>';
-
-                if ($formation['certificats']) {
-                    $html .= '<div style="margin-top: 10px; padding: 8px 12px; background: white; border-radius: 6px; font-size: 12px;"><strong>Certificats:</strong> ' . $formation['certificats'] . '</div>';
-                }
+                $html .= '</tr>';
+                $html .= '</table>';
+                
                 $html .= '</div>';
             }
             $html .= '</div>';
@@ -267,15 +291,15 @@ class EmployeesTable extends Base
 
         // Diplomes Section
         if (!empty($diplomes)) {
-            $html .= '<div style="margin-bottom: 35px;">';
-            $html .= '<h3 style="color: #667eea; font-size: 20px; font-weight: 600; margin-bottom: 15px; padding-bottom: 8px; border-bottom: 3px solid #667eea; display: inline-block;">🏆 DIPLÔMES & QUALIFICATIONS</h3>';
-
+            $html .= '<div style="margin-bottom: 20px;">';
+            $html .= '<h3 style="color: #667eea; font-size: 14px; font-weight: bold; margin: 0 0 10px 0; padding-bottom: 3px; border-bottom: 2px solid #667eea;">DIPLÔMES & QUALIFICATIONS</h3>';
+            
             foreach ($diplomes as $diplome) {
                 if (!empty($diplome['titre'])) {
-                    $html .= '<div style="margin-bottom: 15px; padding: 15px; background: #fff5f5; border-radius: 8px; border-left: 4px solid #ff6b6b;">';
-                    $html .= '<h4 style="color: #333; font-size: 14px; font-weight: 600; margin: 0;">' . $diplome['titre'] . '</h4>';
+                    $html .= '<div style="margin-bottom: 8px; padding: 8px; background-color: #fff5f5; border-left: 3px solid #ff6b6b;">';
+                    $html .= '<h4 style="color: #333; font-size: 11px; font-weight: bold; margin: 0;">' . $diplome['titre'] . '</h4>';
                     if (!empty($diplome['institution'])) {
-                        $html .= '<p style="color: #ff6b6b; margin: 5px 0 0 0; font-size: 13px;"><strong>' . $diplome['institution'] . '</strong></p>';
+                        $html .= '<p style="color: #ff6b6b; margin: 3px 0 0 0; font-size: 10px; font-weight: bold;">' . $diplome['institution'] . '</p>';
                     }
                     $html .= '</div>';
                 }
@@ -283,8 +307,7 @@ class EmployeesTable extends Base
             $html .= '</div>';
         }
 
-        $html .= '</div>'; // Close main content
-        $html .= '</div>'; // Close main container
+        $html .= '</div>';
 
         return $html;
     }
