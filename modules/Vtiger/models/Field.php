@@ -290,6 +290,38 @@ class Vtiger_Field_Model extends vtlib\Field
 	 */
 	public function getDisplayValue($value, $record = false, $recordModel = false, $rawText = false, $length = false)
 	{
+		// Check if this is the unit_price field and handle special logic
+		$fieldName = $this->getName();
+
+		if ($fieldName === 'unit_price') {
+			$currentUser = \App\User::getCurrentUserModel();
+
+			// Check if user has profile ID 8 (Logistique)
+			if ($currentUser->getProfiles()[0] == 8) {
+
+				// Get record model if not provided
+				if (!$recordModel && $record) {
+					$recordModel = \Vtiger_Record_Model::getInstanceById($record);
+				}
+
+				if ($recordModel) {
+					$recordOwner = $recordModel->getRecordOwner();
+					$productCategory = $recordModel->getProductCategory();
+
+					// Logistique can see price if:
+					// 1. They own the record, OR
+					// 2. Product category is "Matériel"
+					if ($currentUser->getId() == $recordOwner || $productCategory === 'Matériel') {
+						return $this->getUITypeModel()->getDisplayValue($value, $record, $recordModel, $rawText, $length);
+					} else {
+						// Hide price for profile 5 users who don't own the record and category is not "Matériel"
+						return '***';
+					}
+				}
+			}
+		}
+
+		// Default behavior for all other cases
 		return $this->getUITypeModel()->getDisplayValue($value, $record, $recordModel, $rawText, $length);
 	}
 
@@ -1289,6 +1321,32 @@ class Vtiger_Field_Model extends vtlib\Field
 	 */
 	public function getEditViewDisplayValue($value, $recordModel = false)
 	{
+		$fieldName = $this->getName();
+
+		if ($fieldName === 'unit_price') {
+			$currentUser = \App\User::getCurrentUserModel();
+
+			// Check if user has profile ID 8 (Logistique)
+			if ($currentUser->getProfiles()[0] == 8) {
+
+				if ($recordModel) {
+					$recordOwner = $recordModel->getRecordOwner();
+					$productCategory = $recordModel->getProductCategory();
+
+					// Logistique can see/edit price if:
+					// 1. They own the record, OR
+					// 2. Product category is "Matériel"
+					if ($currentUser->getId() == $recordOwner || $productCategory === 'Matériel') {
+						return $this->getUITypeModel()->getEditViewDisplayValue($value, $recordModel);
+					} else {
+						// Hide value for restricted access
+						return '***';
+					}
+				}
+			}
+		}
+
+		// Default behavior for all other cases
 		return $this->getUITypeModel()->getEditViewDisplayValue($value, $recordModel);
 	}
 

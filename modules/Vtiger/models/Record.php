@@ -458,7 +458,56 @@ class Vtiger_Record_Model extends \App\Base
 		} else {
 			$field = $this->getModule()->getFieldByName($field);
 		}
+
+		// Check if this is the unit_price field and handle special logic
+		$fieldName = $field->getName();
+
+		if ($fieldName === 'unit_price') {
+			$currentUser = \App\User::getCurrentUserModel();
+
+			// Check if user has profile ID 8 (Logistique)
+			if ($currentUser->getProfiles()[0] == 8) {
+				$recordOwner = $this->getRecordOwner();
+				$productCategory = $this->getProductCategory();
+
+				// Logistique can see price if:
+				// 1. They own the record, OR
+				// 2. Product category is "Matériel"
+				if ($currentUser->getId() == $recordOwner || $productCategory === 'Matériel') {
+					return $field->getUITypeModel()->getListViewDisplayValue($this->get($field->getName()), $this->getId(), $this, $rawText);
+				} else {
+					// Hide price for profile 5 users who don't own the record and category is not "Matériel"
+					return '***';
+				}
+			}
+		}
+
+		// Default behavior for all other cases (other fields or other profiles)
 		return $field->getUITypeModel()->getListViewDisplayValue($this->get($field->getName()), $this->getId(), $this, $rawText);
+	}
+
+	public function getRecordOwner(): ?int
+	{
+		$recordId = $this->getId();
+
+		$query = (new \App\Db\Query())
+			->select(['smownerid'])
+			->from('vtiger_crmentity')
+			->where(['crmid' => $recordId]);
+
+		return $query->scalar(); // returns the owner ID or null
+	}
+
+	public function getProductCategory(): ?string
+	{
+		$recordId = $this->getId();
+
+		$query = (new \App\Db\Query())
+			->select(['category'])
+			->from('vtiger_products')
+			->where(['productid' => $recordId]);
+
+		return $query->scalar(); // returns the category name or null
 	}
 
 	public function getRelatedStorages(): array
