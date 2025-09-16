@@ -95,32 +95,17 @@ class EmployeesTable extends Base
     }
 
     /**
-     * Get diplomes (assuming from qualifications field or separate table)
+     * Get diplomes data
      */
     private function getDiplomes($employeeId)
     {
-        // For now, we'll use the qualifications field
-        // You can modify this if you have a separate diplomes table
-        $employee = $this->getEmployeeData($employeeId);
-        $diplomes = [];
-        
-        if (!empty($employee['qualifications'])) {
-            $diplomes[] = [
-                'titre' => $employee['qualifications'],
-                'institution' => '',
-                'annee' => ''
-            ];
-        }
-        
-        if (!empty($employee['qualificationss'])) {
-            $diplomes[] = [
-                'titre' => $employee['qualificationss'],
-                'institution' => '',
-                'annee' => ''
-            ];
-        }
-        
-        return $diplomes;
+        $query = (new \App\Db\Query())
+            ->select(['intituldiplme', 'annee_obtention', 'ecole'])
+            ->from('u_yf_diplome')
+            ->where(['employe' => $employeeId])
+            ->orderBy(['annee_obtention' => SORT_DESC]);
+
+        return $query->all();
     }
 
     /**
@@ -139,6 +124,26 @@ class EmployeesTable extends Base
         }
         
         return null;
+    }
+
+    /**
+     * Clean HTML content from CKEditor
+     */
+    private function cleanHtmlContent($htmlContent)
+    {
+        if (empty($htmlContent)) {
+            return '';
+        }
+
+        // Remove HTML tags and decode entities
+        $cleanText = strip_tags($htmlContent);
+        $cleanText = html_entity_decode($cleanText, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+        // Replace multiple spaces/newlines with single space
+        $cleanText = preg_replace('/\s+/', ' ', $cleanText);
+
+        // Trim whitespace
+        return trim($cleanText);
     }
 
     /**
@@ -241,7 +246,8 @@ class EmployeesTable extends Base
                 }
                 
                 if ($exp['principales_ref']) {
-                    $html .= '<p style="color: #666; margin: 5px 0 0 0; font-size: 10px; line-height: 1.3; padding-left: 0;">' . $exp['principales_ref'] . '</p>';
+                    $cleanedRef = $this->cleanHtmlContent($exp['principales_ref']);
+                    $html .= '<p style="color: #666; margin: 5px 0 0 0; font-size: 10px; line-height: 1.3; padding-left: 0;">' . $cleanedRef . '</p>';
                 }
                 $html .= '</div>';
             }
@@ -292,15 +298,29 @@ class EmployeesTable extends Base
         // Diplomes Section
         if (!empty($diplomes)) {
             $html .= '<div style="margin-bottom: 20px;">';
-            $html .= '<h3 style="color: #667eea; font-size: 14px; font-weight: bold; margin: 0 0 10px 0; padding-bottom: 3px; border-bottom: 2px solid #667eea;">DIPLÔMES & QUALIFICATIONS</h3>';
-            
+            $html .= '<h3 style="color: #667eea; font-size: 14px; font-weight: bold; margin: 0 0 10px 0; padding-bottom: 3px; border-bottom: 2px solid #667eea; padding-left: 0;">DIPLÔMES & QUALIFICATIONS</h3>';
+
             foreach ($diplomes as $diplome) {
-                if (!empty($diplome['titre'])) {
-                    $html .= '<div style="margin-bottom: 8px; padding: 8px; background-color: #fff5f5; border-left: 3px solid #ff6b6b;">';
-                    $html .= '<h4 style="color: #333; font-size: 11px; font-weight: bold; margin: 0;">' . $diplome['titre'] . '</h4>';
-                    if (!empty($diplome['institution'])) {
-                        $html .= '<p style="color: #ff6b6b; margin: 3px 0 0 0; font-size: 10px; font-weight: bold;">' . $diplome['institution'] . '</p>';
+                if (!empty($diplome['intituldiplme'])) {  // ← Fixed: was 'titre'
+                    $html .= '<div style="margin-bottom: 10px; padding: 8px; background-color: #fff5f5; border-left: 3px solid #ff6b6b;">';
+
+                    $html .= '<table style="width: 100%; border-collapse: collapse;">';
+                    $html .= '<tr>';
+                    $html .= '<td style="width: 70%; vertical-align: top; padding-left: 0;">';
+                    $html .= '<h4 style="color: #333; font-size: 11px; font-weight: bold; margin: 0 0 3px 0; padding-left: 0;">' . $diplome['intituldiplme'] . '</h4>';  // ← Fixed: was 'titre'
+                    $html .= '</td>';
+                    $html .= '<td style="width: 30%; text-align: right; vertical-align: top; padding-left: 0;">';
+                    if ($diplome['annee_obtention']) {  // ← Fixed: added year display
+                        $html .= '<span style="background-color: #ff6b6b; color: white; padding: 1px 4px; font-size: 9px;">' . $diplome['annee_obtention'] . '</span>';
                     }
+                    $html .= '</td>';
+                    $html .= '</tr>';
+                    $html .= '</table>';
+
+                    if ($diplome['ecole']) {  // ← Fixed: was 'institution'
+                        $html .= '<p style="color: #ff6b6b; font-weight: bold; margin: 3px 0; font-size: 10px; padding-left: 0;">' . $diplome['ecole'] . '</p>';
+                    }
+
                     $html .= '</div>';
                 }
             }
