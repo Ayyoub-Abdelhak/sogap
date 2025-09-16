@@ -109,7 +109,7 @@ class EmployeesTable extends Base
     }
 
     /**
-     * Calculate years of experience from first experience
+     * Calculate years of experience from sum of all experience periods
      */
     private function calculateYearsOfExperience($experiences)
     {
@@ -117,25 +117,42 @@ class EmployeesTable extends Base
             return 0;
         }
 
-        // Find the earliest experience date
-        $earliestDate = null;
+        $totalMonths = 0;
+
         foreach ($experiences as $exp) {
             if (!empty($exp['date_debut'])) {
                 $startDate = new \DateTime($exp['date_debut']);
-                if ($earliestDate === null || $startDate < $earliestDate) {
-                    $earliestDate = $startDate;
+
+                // Use date_fin if provided, otherwise use current date
+                if (!empty($exp['date_fin'])) {
+                    $endDate = new \DateTime($exp['date_fin']);
+                } else {
+                    $endDate = new \DateTime(); // Current date
                 }
+
+                // Calculate the difference and add to total
+                $interval = $endDate->diff($startDate);
+                $monthsInThisJob = ($interval->y * 12) + $interval->m;
+
+                // Add days as fractional months (if more than 15 days, count as additional month)
+                if ($interval->d >= 15) {
+                    $monthsInThisJob += 1;
+                }
+
+                $totalMonths += $monthsInThisJob;
             }
         }
 
-        if ($earliestDate === null) {
-            return 0;
+        // Convert total months to years
+        $years = intval($totalMonths / 12);
+        $remainingMonths = $totalMonths % 12;
+
+        // Round up if 6+ months remaining
+        if ($remainingMonths >= 6) {
+            $years += 1;
         }
 
-        $currentDate = new \DateTime();
-        $interval = $currentDate->diff($earliestDate);
-        
-        return $interval->y + ($interval->m >= 6 ? 1 : 0); // Round up if 6+ months
+        return $years;
     }
 
     /**
@@ -298,10 +315,10 @@ class EmployeesTable extends Base
         $html .= '</td>';
         $html .= '<td style="width: 50%; padding: 2px; vertical-align: top; padding-left: 0;">';
         if ($yearsOfExperience > 0) {
-            $html .= '<div style="margin-bottom: 3px; padding-left: 0;"><strong>Nombre d\'années d\'expérience:</strong> ' . $yearsOfExperience . ' ans</div>';
+            $html .= '<div style="margin-bottom: 3px; padding-left: 0;"><strong>Nombre d\'années d\'expérience:</strong> ' . $yearsOfExperience . ' an(s)</div>';
         }
         if ($seniority > 0) {
-            $html .= '<div style="margin-bottom: 3px; padding-left: 0;"><strong>Ancienneté au sein de l\'entreprise:</strong> ' . $seniority . ' ans</div>';
+            $html .= '<div style="margin-bottom: 3px; padding-left: 0;"><strong>Ancienneté au sein de l\'entreprise:</strong> ' . $seniority . ' an(s)</div>';
         }
         $html .= '</td>';
         $html .= '</tr>';
