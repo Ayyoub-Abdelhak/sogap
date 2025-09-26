@@ -37,9 +37,9 @@ class ProductsTableSortieVersion extends Base
 				<tr>
 					<th style="' . $headerStyle . '">CodeP/M</th>
 					<th style="' . $headerStyle . '">Libellé</th>
+					<th style="' . $headerStyle . '">Quantité</th>
 					<th style="' . $headerStyle . '">Type</th>
 					<th style="' . $headerStyle . '">Fournisseur</th>
-					<th style="' . $headerStyle . '">Etat</th>
 					<th style="' . $headerStyle . '">Affectation</th>
 				</tr>
 			</thead>
@@ -64,7 +64,7 @@ class ProductsTableSortieVersion extends Base
 				$productNo = $productRecord->get('product_no');
 				$productName = $productRecord->get('productname');
 				$productType = $productRecord->get('type');
-				$etat = $productRecord->get('etatmateriel');
+				// $etat = $productRecord->get('etatmateriel');
 
 				// Fetch vendor name
 				$vendorName = '';
@@ -75,22 +75,22 @@ class ProductsTableSortieVersion extends Base
 					}
 				}
 
-				// Fetch project name for Affectation
-				$projectName = '';
-				if ($projectId = $productRecord->get('affectation')) {
-					$projectRecord = \Vtiger_Record_Model::getInstanceById($projectId, 'Project');
+				// Fetch storage name for Affectation
+				$storageName = '';
+				if ($storageId = $productRecord->get('affectation')) {
+					$projectRecord = \Vtiger_Record_Model::getInstanceById($storageId, 'IStorages');
 					if ($projectRecord) {
-						$projectName = $projectRecord->get('projectname');
+						$storageName = $projectRecord->get('subject');
 					}
 				}
 
 				$html .= '<tr class="row">
 					<td style="' . $bodyStyle . 'text-align:left;">' . htmlspecialchars($productNo) . '</td>
 					<td style="' . $bodyStyle . 'text-align:left;">' . htmlspecialchars($productName) . '</td>
+					<td style="' . $bodyStyle . 'text-align:left;">' . htmlspecialchars(intval($inventoryRow['qty'])) . '</td>
 					<td style="' . $bodyStyle . 'text-align:left;">' . htmlspecialchars($productType) . '</td>
 					<td style="' . $bodyStyle . 'text-align:left;">' . htmlspecialchars($vendorName) . '</td>
-					<td style="' . $bodyStyle . 'text-align:left;">' . htmlspecialchars($etat) . '</td>
-					<td style="' . $bodyStyle . 'text-align:left;">' . htmlspecialchars($projectName) . '</td>
+					<td style="' . $bodyStyle . 'text-align:left;">' . htmlspecialchars($storageName) . '</td>
 				</tr>';
 
 				$lines--; // Decrement the lines count after each product row

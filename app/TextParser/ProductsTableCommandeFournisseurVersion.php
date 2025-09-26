@@ -105,6 +105,12 @@ class ProductsTableCommandeFournisseurVersion extends Base
 							$fieldStyle = $bodyStyle . 'text-align:right;white-space: nowrap;';
 						} else {
 							$fieldValue = $fieldModel->getDisplayValue($itemValue, $inventoryRow, true);
+							if ('Quantity' === $typeName) {
+								// If the value ends with .00, remove it to show only integer
+								if (preg_match('/\.00$/', $fieldValue)) {
+									$fieldValue = preg_replace('/\.00$/', '', $fieldValue);
+								}
+							}
 						}
 						$fieldValue = in_array($fieldValue, ['0', '0.00 DH', '0 DH', 'nan']) ? '' : $fieldValue;
 						$fieldValue = str_replace("DH","",$fieldValue);
