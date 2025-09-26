@@ -297,8 +297,8 @@ class EmployeesTable extends Base
         $html .= '</table>';
 
         // Personal Info Section
-        $html .= '<div style="margin-bottom: 15px; padding: 12px; background-color: #f8f9fa; border-left: 4px solid #667eea;">';
-        $html .= '<h3 style="color: #667eea; font-size: 12px; font-weight: bold; margin: 0 0 8px 0; padding-bottom: 4px; border-bottom: 4px solid #667eea; padding-left: 0;">INFORMATIONS PERSONNELLES</h3>';
+        $html .= '<div style="margin: 5px; padding: 10px; border-collapse:collapse;border:1px solid #666; background-color: #f8f9fa;">';
+        $html .= '<h3 style="color: #667eea; font-size: 12px; font-weight: bold; margin: 0 0 8px 0; padding-bottom: 4px;padding-left: 0;"><span style="border-bottom-style:solid;border-bottom-width:2px;border-bottom-color:#667eea;">INFORMATIONS PERSONNELLES</span></h3>';
         
         $html .= '<table style="width: 100%; border-collapse: collapse; font-size: 8px;">';
         $html .= '<tr>';
@@ -327,8 +327,8 @@ class EmployeesTable extends Base
 
         // Experience Section
         if (!empty($experiences)) {
-            $html .= '<div style="margin-bottom: 15px;">';
-            $html .= '<h3 style="color: #667eea; font-size: 12px; font-weight: bold; margin: 0 0 8px 0; padding-bottom: 4px; border-bottom: 4px solid #667eea; padding-left: 0;">EXPÉRIENCES PROFESSIONNELLES</h3>';
+            $html .= '<div style="margin: 5px; padding: 10px; border-collapse:collapse;border:1px solid #666;">';
+            $html .= '<h3 style="color: #667eea; font-size: 12px; font-weight: bold; margin: 0 0 8px 0; padding-bottom: 4px; border-bottom: 4px solid #667eea; padding-left: 0;"><span style="border-bottom-style:solid;border-bottom-width:2px;border-bottom-color:#667eea;">EXPÉRIENCES PROFESSIONNELLES</span></h3>';
             
             // Reverse order for display (most recent first)
             $displayExperiences = array_reverse($experiences);
@@ -365,8 +365,8 @@ class EmployeesTable extends Base
 
         // Formation Section
         if (!empty($formations)) {
-            $html .= '<div style="margin-bottom: 15px;">';
-            $html .= '<h3 style="color: #667eea; font-size: 12px; font-weight: bold; margin: 0 0 8px 0; padding-bottom: 4px; border-bottom: 4px solid #667eea; padding-left: 0;">FORMATIONS</h3>';
+            $html .= '<div style="margin: 5px; padding: 10px; border-collapse:collapse;border:1px solid #666;">';
+            $html .= '<h3 style="color: #667eea; font-size: 12px; font-weight: bold; margin: 0 0 8px 0; padding-bottom: 4px; border-bottom: 4px solid #667eea; padding-left: 0;"><span style="border-bottom-style:solid;border-bottom-width:2px;border-bottom-color:#667eea;">FORMATIONS</span></h3>';
             
             foreach ($formations as $formation) {
                 $html .= '<div style="margin-bottom: 5px; padding: 0; border-left: 3px solid #4dabf7; padding-left: 8px;">';
@@ -406,8 +406,8 @@ class EmployeesTable extends Base
 
         // Diplomes Section
         if (!empty($diplomes)) {
-            $html .= '<div style="margin-bottom: 15px;">';
-            $html .= '<h3 style="color: #667eea; font-size: 12px; font-weight: bold; margin: 0 0 8px 0; padding-bottom: 4px; border-bottom: 4px solid #667eea; padding-left: 0;">DIPLÔMES & QUALIFICATIONS</h3>';
+            $html .= '<div style="margin: 5px; padding: 10px; border-collapse:collapse;border:1px solid #666;">';
+            $html .= '<h3 style="color: #667eea; font-size: 12px; font-weight: bold; margin: 0 0 8px 0; padding-bottom: 4px; border-bottom: 4px solid #667eea; padding-left: 0;"><span style="border-bottom-style:solid;border-bottom-width:2px;border-bottom-color:#667eea;">DIPLÔMES & QUALIFICATIONS</span></h3>';
 
             foreach ($diplomes as $diplome) {
                 if (!empty($diplome['intituldiplme'])) {
