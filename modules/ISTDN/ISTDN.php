@@ -59,7 +59,7 @@ class ISTDN extends Vtiger_CRMEntity
 	public $def_detailview_recname = 'subject';
 	// Used when enabling/disabling the mandatory fields for the module.
 	// Refers to vtiger_field.fieldname values.
-	public $mandatory_fields = ['subject', 'assigned_user_id'];
+	public $mandatory_fields = ['assigned_user_id'];
 	public $default_order_by = '';
 	public $default_sort_order = 'ASC';
 }

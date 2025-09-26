@@ -77,10 +77,11 @@ class ProductsTableEntreeVersion extends Base
 
 				// Fetch storage name for Affectation
 				$storageName = '';
-				if ($storageId = $productRecord->get('affectation')) {
-					$projectRecord = \Vtiger_Record_Model::getInstanceById($storageId, 'IStorages');
-					if ($projectRecord) {
-						$storageName = $projectRecord->get('subject');
+				$storageId = $recordModel->get('storageid') ?: $recordModel->get('storageidout');
+				if ($storageId) {
+					$storageRecord = \Vtiger_Record_Model::getInstanceById($storageId, 'IStorages');
+					if ($storageRecord) {
+						$storageName = $storageRecord->get('subject');
 					}
 				}
 
