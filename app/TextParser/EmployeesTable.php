@@ -86,7 +86,7 @@ class EmployeesTable extends Base
     private function getExperiences($employeeId)
     {
         $query = (new \App\Db\Query())
-            ->select(['poste', 'entite', 'principales_ref', 'date_debut', 'date_fin'])
+            ->select(['poste', 'entite', 'principales_refs', 'date_debut', 'date_fin'])
             ->from('u_yf_expriencespro')
             ->where(['employe' => $employeeId])
             ->orderBy(['date_debut' => SORT_ASC]); // Changed to ASC to get oldest first
