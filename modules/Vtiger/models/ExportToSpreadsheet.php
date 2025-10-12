@@ -154,7 +154,17 @@ class Vtiger_ExportToSpreadsheet_Model extends \App\Export\Records
 				break;
 			default:
 				$displayValue = $this->getDisplayValue($fieldModel, $value, $id, []) ?: '';
-				$this->workSheet->setCellValueExplicitByColumnAndRow($this->colNo, $this->rowNo, $displayValue, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+
+				// Try to extract numeric value from string
+				$cleanValue = preg_replace('/[^0-9.\-]/', '', $displayValue);
+
+				// If the cleaned value is numeric and original had non-numeric characters, treat as number
+				if (is_numeric($cleanValue) && $cleanValue !== $displayValue && !empty($cleanValue)) {
+					$this->workSheet->setCellValueExplicitByColumnAndRow($this->colNo, $this->rowNo, (float) $cleanValue, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC);
+				} else {
+					$this->workSheet->setCellValueExplicitByColumnAndRow($this->colNo, $this->rowNo, $displayValue, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+				}
+				break;
 		}
 		++$this->colNo;
 	}
