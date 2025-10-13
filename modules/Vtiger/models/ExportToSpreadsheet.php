@@ -152,15 +152,24 @@ class Vtiger_ExportToSpreadsheet_Model extends \App\Export\Records
 					$this->workSheet->setCellValueExplicitByColumnAndRow($this->colNo, $this->rowNo, '', \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
 				}
 				break;
-			default:
+				default:
 				$displayValue = $this->getDisplayValue($fieldModel, $value, $id, []) ?: '';
-
-				// Try to extract numeric value from string
-				$cleanValue = preg_replace('/[^0-9.\-]/', '', $displayValue);
-
-				// If the cleaned value is numeric and original had non-numeric characters, treat as number
-				if (is_numeric($cleanValue) && $cleanValue !== $displayValue && !empty($cleanValue)) {
-					$this->workSheet->setCellValueExplicitByColumnAndRow($this->colNo, $this->rowNo, (float) $cleanValue, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC);
+				
+				// Check if this is a currency field and extract numeric value
+				if ($fieldModel->getFieldDataType() === 'currency' || strpos($displayValue, 'DH') !== false) {
+					// Extract only numeric value from currency string
+					$numericValue = preg_replace('/[^0-9.\-]/', '', $displayValue);
+					
+					if (is_numeric($numericValue)) {
+						// Store as numeric for Excel calculations
+						$this->workSheet->setCellValueExplicitByColumnAndRow($this->colNo, $this->rowNo, $numericValue, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_NUMERIC);
+						// Optional: Apply currency formatting in Excel
+						// $this->workSheet->getStyleByColumnAndRow($this->colNo, $this->rowNo)
+						//     ->getNumberFormat()
+						//     ->setFormatCode('#,##0.00 "DH"');
+					} else {
+						$this->workSheet->setCellValueExplicitByColumnAndRow($this->colNo, $this->rowNo, $displayValue, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+					}
 				} else {
 					$this->workSheet->setCellValueExplicitByColumnAndRow($this->colNo, $this->rowNo, $displayValue, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
 				}
