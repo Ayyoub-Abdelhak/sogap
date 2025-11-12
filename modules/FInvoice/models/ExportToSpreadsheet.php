@@ -40,11 +40,11 @@ class FInvoice_ExportToSpreadsheet_Model extends Vtiger_ExportToSpreadsheet_Mode
             if (!empty($missingFields) && !empty($row['id'])) {
 				$recordData = (new \App\Db\Query())
                     ->select($missingFields)
-                    ->from('vtiger_finvoice')
-                    ->innerJoin('vtiger_crmentity', 'vtiger_finvoice.finvoiceid = vtiger_crmentity.crmid')
+                    ->from('u_yf_finvoice')
+                    ->innerJoin('vtiger_crmentity', 'u_yf_finvoice.finvoiceid = vtiger_crmentity.crmid')
 					->where(['vtiger_crmentity.crmid' => $row['id'], 'vtiger_crmentity.deleted' => 0])
 					->one();
-				
+                    
 				if ($recordData) {
                     $row = array_merge($row, $recordData);
 				}
