@@ -34,7 +34,7 @@ class FInvoice_ExportToSpreadsheet_Model extends Vtiger_ExportToSpreadsheet_Mode
         // If either sum_gross or sum_total is being exported, we need to recalculate
         if ($sumGrossExists || $sumTotalExists) {
             // Fetch required fields if not in row
-            $requiredFields = ['sum_total', 'sum_gross', 'retenue_garantie', 'reception_definitive', 'reception_provisoire', 'sum_discount'];
+            $requiredFields = ['sum_total', 'sum_gross', 'retenue_garantie', 'reception_definitive', 'reception_provisoire'];
             $missingFields = array_diff($requiredFields, array_keys($row));
 
             if (!empty($missingFields) && !empty($row['id'])) {
