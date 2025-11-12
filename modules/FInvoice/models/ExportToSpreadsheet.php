@@ -17,42 +17,71 @@ class FInvoice_ExportToSpreadsheet_Model extends Vtiger_ExportToSpreadsheet_Mode
 	/** {@inheritdoc} */
 	public function sanitizeValues(array $row): array
 	{
-		// Check if sum_gross is being exported
+        // Check if sum_gross (TTC) or sum_total (HT) are being exported
 		$sumGrossExists = false;
-		foreach ($this->fields as $fieldModel) {
-			if ($fieldModel->getName() === 'sum_gross') {
+        $sumTotalExists = false;
+
+        foreach ($this->fields as $fieldModel) {
+            $fieldName = $fieldModel->getName();
+            if ($fieldName === 'sum_gross') {
 				$sumGrossExists = true;
-				break;
+            }
+            if ($fieldName === 'sum_total') {
+                $sumTotalExists = true;
 			}
 		}
-		
-		// Only modify sum_gross if it's being exported
-		if ($sumGrossExists && isset($row['sum_gross'])) {
-			// Fetch retenue_garantie if not in row
-			if (!isset($row['retenue_garantie']) && !empty($row['id'])) {
+
+        // If either sum_gross or sum_total is being exported, we need to recalculate
+        if ($sumGrossExists || $sumTotalExists) {
+            // Fetch required fields if not in row
+            $requiredFields = ['sum_total', 'sum_gross', 'retenue_garantie', 'reception_definitive', 'reception_provisoire', 'sum_discount'];
+            $missingFields = array_diff($requiredFields, array_keys($row));
+
+            if (!empty($missingFields) && !empty($row['id'])) {
 				$recordData = (new \App\Db\Query())
-					->select(['retenue_garantie'])
-					->from('u_yf_finvoice')
-					->innerJoin('vtiger_crmentity', 'u_yf_finvoice.finvoiceid = vtiger_crmentity.crmid')
+                    ->select($missingFields)
+                    ->from('vtiger_finvoice')
+                    ->innerJoin('vtiger_crmentity', 'vtiger_finvoice.finvoiceid = vtiger_crmentity.crmid')
 					->where(['vtiger_crmentity.crmid' => $row['id'], 'vtiger_crmentity.deleted' => 0])
 					->one();
 				
 				if ($recordData) {
-					$row['retenue_garantie'] = $recordData['retenue_garantie'];
+                    $row = array_merge($row, $recordData);
 				}
 			}
-			
-			$totalTTC = (float)$row['sum_gross'];
-			$retenueGarantiePercentage = (float)($row['retenue_garantie'] ?? 0);
-			
-			// Calculate retenue de garantie amount
-			$retenueGarantie = $totalTTC * $retenueGarantiePercentage / 100;
-			
-			// Calculate total after retenue de garantie
+
+            // Get base values
+            $ht = (float) ($row['sum_total'] ?? 0);
+            $discount = (float) ($row['sum_discount'] ?? 0);
+            $receptionDefinitivePercentage = (int) ($row['reception_definitive'] ?? 0);
+            $receptionProvisoirePercentage = (int) ($row['reception_provisoire'] ?? 0);
+
+            // Calculate reception amounts
+            $totalHT = $ht - $discount;
+            $receptionDefinitive = $totalHT * $receptionDefinitivePercentage / 100;
+            $receptionProvisoire = $totalHT * $receptionProvisoirePercentage / 100;
+
+            // Adjust HT after reception deductions
+            $totalHT = $totalHT - $receptionDefinitive - $receptionProvisoire;
+
+            // Calculate TVA (20%)
+            $totalTVA = ($receptionDefinitive > 0 || $receptionProvisoire > 0) ? $totalHT * 0.2 : (float) ($row['sum_gross'] ?? 0) - $ht;
+
+            // Calculate TTC before retenue garantie
+            $totalTTC = round($totalHT + $totalTVA, 2);
+
+            // Apply retenue de garantie
+            $retenueGarantiePercentage = (float) ($row['retenue_garantie'] ?? 0);
+            $retenueGarantie = $totalTTC * $retenueGarantiePercentage / 100;
 			$totalRGTTC = round($totalTTC - $retenueGarantie, 2);
-			
-			// Replace sum_gross with the calculated value (TTC - retenue_garantie)
-			$row['sum_gross'] = $totalRGTTC;
+
+            // Update the row with recalculated values
+            if ($sumTotalExists) {
+                $row['sum_total'] = $totalHT;
+            }
+            if ($sumGrossExists) {
+                $row['sum_gross'] = $totalRGTTC;
+            }
 		}
 		
 		// Now process the row with the parent method
