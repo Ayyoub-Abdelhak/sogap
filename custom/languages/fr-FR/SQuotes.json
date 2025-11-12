@@ -1,5 +1,8 @@
 {
     "php": {
-        "SINGLE_Accounts": "Client"
+        "SINGLE_Accounts": "Client",
+        "LBL_NUMBER": "N° de devis",
+        "LBL_SUBJECT": "Objet",
+        "FL_SUM_GROSS": "Montant TTC"
     }
 }
