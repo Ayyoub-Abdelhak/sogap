@@ -186,9 +186,15 @@ class YetiForcePDF extends Base
 	 */
 	public function getHtml(): string
 	{
-		$html = $this->watermark ? $this->wrapWatermark($this->watermark) : '';
+		// Check if body contains no-watermark-section marker
+		$bodyContent = $this->getBody();
+		$skipWatermark = strpos($bodyContent, 'class="no-watermark-section"') !== false ||
+		                 strpos($bodyContent, "class='no-watermark-section'") !== false;
+
+		// Only add watermark if not explicitly excluded
+		$html = ($this->watermark && !$skipWatermark) ? $this->wrapWatermark($this->watermark) : '';
 		$html .= $this->header ? $this->wrapHeaderContent($this->header) : '';
-		$html .= $this->getBody();
+		$html .= $bodyContent;
 		$html .= $this->footer ? $this->wrapFooterContent($this->footer) : '';
 		return $html;
 	}

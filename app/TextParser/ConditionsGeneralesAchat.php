@@ -26,7 +26,7 @@ class ConditionsGeneralesAchat extends Base
      */
     public function process()
     {
-        $html = '<style>
+        $html = '<div class="no-watermark-section"><style>
             .cga-header-table {
                 width: 100%;
                 border: 1px solid #000;
@@ -266,6 +266,7 @@ class ConditionsGeneralesAchat extends Base
         $html .= '</td>';
         $html .= '</tr>';
         $html .= '</table>';
+        $html .= '</div><!-- End no-watermark-section -->';
 
         return $html;
     }
