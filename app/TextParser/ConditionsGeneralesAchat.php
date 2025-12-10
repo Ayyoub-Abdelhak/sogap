@@ -27,19 +27,6 @@ class ConditionsGeneralesAchat extends Base
     public function process()
     {
         $html = '<style>
-            /* Hide watermark on CGA pages */
-            @media print {
-                #watermark {
-                    display: none !important;
-                    visibility: hidden !important;
-                    opacity: 0 !important;
-                }
-            }
-            .cga-page-content {
-                position: relative;
-                z-index: 10000;
-                background: white;
-            }
             .cga-header-table {
                 width: 100%;
                 border: 1px solid #000;
@@ -94,9 +81,6 @@ class ConditionsGeneralesAchat extends Base
                 margin-bottom: 3px;
             }
         </style>';
-
-        // Start content wrapper
-        $html .= '<div class="cga-page-content">';
 
         // HEADER
         $html .= '<table class="cga-header-table">';
@@ -282,9 +266,6 @@ class ConditionsGeneralesAchat extends Base
         $html .= '</td>';
         $html .= '</tr>';
         $html .= '</table>';
-
-        // End content wrapper
-        $html .= '</div><!-- End cga-page-content -->';
 
         return $html;
     }
