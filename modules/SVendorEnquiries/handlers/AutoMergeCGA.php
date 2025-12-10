@@ -34,19 +34,30 @@ class SVendorEnquiries_AutoMergeCGA_Handler
 	 */
 	public function pdfGenerateInit(App\EventHandler $eventHandler)
 	{
+		// Log that handler was called
+		\App\Log::warning('SVendorEnquiries Auto Merge CGA: Handler called');
+
 		// Get current templates from the event
 		$templates = $eventHandler->getParam('templates');
+		\App\Log::warning('SVendorEnquiries Auto Merge CGA: Current templates = ' . print_r($templates, true));
 
 		// Check if the main template (38) is being generated
 		if (in_array(self::MAIN_TEMPLATE_ID, $templates)) {
+			\App\Log::warning('SVendorEnquiries Auto Merge CGA: Main template (38) found in list');
+
 			// Check if CGA template is not already in the list
 			if (!in_array(self::CGA_TEMPLATE_ID, $templates)) {
 				// Add CGA template to the list
 				$templates[] = self::CGA_TEMPLATE_ID;
 				$eventHandler->addParams('templates', $templates);
 
-				\App\Log::trace('SVendorEnquiries Auto Merge CGA: Added CGA template (55) to merge with main template (38)');
+				\App\Log::warning('SVendorEnquiries Auto Merge CGA: Added CGA template (55) to merge with main template (38)');
+				\App\Log::warning('SVendorEnquiries Auto Merge CGA: New templates = ' . print_r($templates, true));
+			} else {
+				\App\Log::warning('SVendorEnquiries Auto Merge CGA: CGA template (55) already in list');
 			}
+		} else {
+			\App\Log::warning('SVendorEnquiries Auto Merge CGA: Main template (38) NOT found. Templates: ' . print_r($templates, true));
 		}
 	}
 }
