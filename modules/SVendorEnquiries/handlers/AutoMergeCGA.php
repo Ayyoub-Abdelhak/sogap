@@ -16,9 +16,9 @@
 class SVendorEnquiries_AutoMergeCGA_Handler
 {
 	/**
-	 * CGA PDF Template ID - UPDATE THIS WITH YOUR ACTUAL TEMPLATE ID.
+	 * CGA PDF Template ID - Conditions Générales Achat template.
 	 */
-	const CGA_TEMPLATE_ID = null; // TODO: Set this to your CGA template ID (e.g., 56)
+	public const CGA_TEMPLATE_ID = 55;
 
 	/**
 	 * PdfGenerateInit handler function - automatically add CGA template to merge.
@@ -42,7 +42,7 @@ class SVendorEnquiries_AutoMergeCGA_Handler
 		if (!in_array(self::CGA_TEMPLATE_ID, $templates)) {
 			// Add CGA template to the list
 			$templates[] = self::CGA_TEMPLATE_ID;
-			$eventHandler->setParam('templates', $templates);
+			$eventHandler->addParams('templates', $templates);
 
 			\App\Log::trace('SVendorEnquiries Auto Merge CGA: Added CGA template to PDF generation');
 		}
