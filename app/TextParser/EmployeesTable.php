@@ -354,8 +354,8 @@ class EmployeesTable extends Base
                     $html .= '<p style="color: #667eea; font-weight: bold; margin: 2px 0; font-size: 9px; padding-left: 0;">' . $exp['entite'] . '</p>';
                 }
                 
-                if ($exp['principales_ref']) {
-                    $cleanedRef = $this->cleanHtmlContent($exp['principales_ref']);
+                if ($exp['principales_refs']) {
+                    $cleanedRef = $this->cleanHtmlContent($exp['principales_refs']);
                     $html .= '<p style="color: #666; margin: 3px 0 0 0; font-size: 8px; line-height: 1.2; padding-left: 0;">' . $cleanedRef . '</p>';
                 }
                 $html .= '</div>';
