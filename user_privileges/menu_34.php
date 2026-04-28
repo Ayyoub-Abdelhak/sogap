@@ -1,0 +1,4 @@
+<?php $menus = [344=>['id'=>344,'tabid'=>3,'mod'=>'Home','label'=>'Home page','type'=>'Module','sequence'=>1,'newwindow'=>0,'dataurl'=>'index.php?module=Home&view=DashBoard&mid=344','icon'=>'yfm-Home','parent'=>0,'hotkey'=>'','countentries'=>0,'childs'=>[]],381=>['id'=>381,'tabid'=>51,'mod'=>'OSSTimeControl','label'=>NULL,'type'=>'Module','sequence'=>2,'newwindow'=>0,'dataurl'=>'index.php?module=OSSTimeControl&view=Calendar&mid=381','icon'=>'','parent'=>0,'hotkey'=>'','countentries'=>0,'childs'=>[]],];
+$parentList = [344=>['type'=>'Module','mod'=>'Home','label'=>'Home page','dataurl'=>'index.php?module=Home&view=DashBoard&mid=344','parent'=>0,],381=>['type'=>'Module','mod'=>'OSSTimeControl','label'=>NULL,'dataurl'=>'index.php?module=OSSTimeControl&view=Calendar&mid=381','parent'=>0,],];
+$filterList = [];
+

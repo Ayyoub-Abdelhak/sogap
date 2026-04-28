@@ -1,0 +1,8 @@
+{
+    "php": {
+        "FCorectingInvoice": "Avoirs",
+        "SINGLE_FCorectingInvoice": "Avoir",
+        "LBL_INVOICE_ADDRESS": "Adresse d'avoir",
+        "FL_ACCOUNT": "Client"
+    }
+}
