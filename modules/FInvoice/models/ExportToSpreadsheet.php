@@ -34,7 +34,7 @@ class FInvoice_ExportToSpreadsheet_Model extends Vtiger_ExportToSpreadsheet_Mode
 		// If either sum_gross or sum_total is being exported, we need to recalculate
 		if (($sumGrossExists || $sumTotalExists) && !empty($row['id'])) {
 			// Fetch required fields if not in row
-			$requiredFields = ['sum_total', 'sum_gross', 'retenue_garantie', 'reception_definitive', 'reception_provisoire'];
+			$requiredFields = ['sum_total', 'sum_gross', 'retenue_garantie', 'reception_definitive', 'reception_provisoire', 'discount'];
 			$missingFields = array_diff($requiredFields, array_keys($row));
 			
 			if (!empty($missingFields)) {
@@ -61,11 +61,12 @@ class FInvoice_ExportToSpreadsheet_Model extends Vtiger_ExportToSpreadsheet_Mode
 			
 			// Get base values
 			$ht = (float)($row['sum_total'] ?? 0);
+			$recordDiscount = (float)($row['discount'] ?? 0);
 			$receptionDefinitivePercentage = (int)($row['reception_definitive'] ?? 0);
 			$receptionProvisoirePercentage = (int)($row['reception_provisoire'] ?? 0);
 			
 			// Calculate reception amounts
-			$totalHT = $ht - $discount;
+			$totalHT = $ht - $discount - $recordDiscount;
 			$receptionDefinitive = $totalHT * $receptionDefinitivePercentage / 100;
 			$receptionProvisoire = $totalHT * $receptionProvisoirePercentage / 100;
 			

@@ -184,6 +184,10 @@ class ProductsTableFactureMRVersion extends Base
             }
             $html .= '</tr></tfoot></table>';
 
+            $recordDiscount = (float)($this->textParser->recordModel->get('discount') ?? 0);
+            $remise = $discount + $recordDiscount;
+            $totalHT = $ht - $remise;
+
             $html .= '
 			<div style="padding: 0px 0px 0px 221px">
 				<table style="width:100%;font-size:8px;margin-top:15px;border-collapse:collapse;border:1px solid black;font-weight:bold;">
@@ -192,12 +196,22 @@ class ProductsTableFactureMRVersion extends Base
 							TOTAL HT
 						</td>
 						<td style="width: 25%;text-align:center;border:1px solid black;">' . \CurrencyField::convertToUserFormat($ht, null, true) . '</td>
-					</tr>
+					</tr>';
+            if ($remise > 0) {
+                $html .= '
+                <tr>
+                    <td style="width:75%;text-align:center;border:1px solid black;">
+                        Remise
+                    </td>
+                    <td style="width: 25%;text-align:center;border:1px solid black;">' . \CurrencyField::convertToUserFormat($remise, null, true) . '</td>
+                </tr>';
+            }
+            $html .= '
 				</table>
 			</div>';
 
-            $currency = \Vtiger_Util_Helper::is_decimal($ht) ? '' : ' DIRHAMS';
-            $html .= '<div style="font-size:9px;margin-top:20px;"><b>ARRÊTÉE LA PRÉSENTE FACTURE À LA SOMME DE :</b><br /><b>' . \Vtiger_Util_Helper::int2str($ht) . $currency . ' HT</b></div>';
+            $currency = \Vtiger_Util_Helper::is_decimal($totalHT) ? '' : ' DIRHAMS';
+            $html .= '<div style="font-size:9px;margin-top:20px;"><b>ARRÊTÉE LA PRÉSENTE FACTURE À LA SOMME DE :</b><br /><b>' . \Vtiger_Util_Helper::int2str($totalHT) . $currency . ' HT</b></div>';
         }
         return $html;
     }

@@ -89,6 +89,11 @@ class ProductsTableDevisVersion extends Base
 			}
 		}
 		$ttc = round($ttc, 2);
+		$recordDiscount = (float)($this->textParser->recordModel->get('discount') ?? 0);
+		$remise = $discount + $recordDiscount;
+		$netHT = $ht - $remise;
+		$totalTVA = $remise > 0 ? $netHT * 0.2 : $tax;
+		$totalTTC = $remise > 0 ? round($netHT + $totalTVA, 2) : $ttc;
 
 		$fieldTypes = ['Name', 'Value', 'Quantity', 'UnitPrice'];
 		if ($discount > 0 && !$discountModeIsGroup) {
@@ -200,31 +205,34 @@ class ProductsTableDevisVersion extends Base
 						<td style="width:75%;text-align:center;border:1px solid black;">
 							TOTAL HT
 						</td>
-						<td style="width: 25%;text-align:center;border:1px solid black;">' . \CurrencyField::convertToUserFormat($discountModeIsGroup ? $ht : $ht - $discount, null, true) . '</td>
+						<td style="width: 25%;text-align:center;border:1px solid black;">' . \CurrencyField::convertToUserFormat($ht, null, true) . '</td>
 					</tr>';
-			if ($discount > 0 && $discountModeIsGroup) {
+			if ($remise > 0) {
+				$remiseLabel = ($discountModeIsGroup && $discountPercentage > 0 && $recordDiscount == 0)
+					? 'REMISE (' . $discountPercentage . '%)'
+					: 'REMISE';
 				$html .= '
 				<tr>
 					<td style="width:75%;text-align:center;border:1px solid black;">
-						REMISE (' . $discountPercentage . '%)
+						' . $remiseLabel . '
 					</td>
-					<td style="width: 25%;text-align:center;border:1px solid black;">' . \CurrencyField::convertToUserFormat($discount, null, true) . '</td>
+					<td style="width: 25%;text-align:center;border:1px solid black;">' . \CurrencyField::convertToUserFormat($remise, null, true) . '</td>
 				</tr>';
 				$html .= '
 				<tr>
 					<td style="width:75%;text-align:center;border:1px solid black;">
 						TOTAL HT
 					</td>
-					<td style="width: 25%;text-align:center;border:1px solid black;">' . \CurrencyField::convertToUserFormat($ht - $discount, null, true) . '</td>
+					<td style="width: 25%;text-align:center;border:1px solid black;">' . \CurrencyField::convertToUserFormat($netHT, null, true) . '</td>
 				</tr>';
 			}
-			if ($tax > 0) {
+			if ($totalTVA > 0) {
 				$html .= '
 				<tr>
 					<td style="width:75%;text-align:center;border:1px solid black;">
 						TVA 20%
 					</td>
-					<td style="width: 25%;text-align:center;border:1px solid black;">' . \CurrencyField::convertToUserFormat($tax, null, true) . '</td>
+					<td style="width: 25%;text-align:center;border:1px solid black;">' . \CurrencyField::convertToUserFormat($totalTVA, null, true) . '</td>
 				</tr>';
 			}
 			$html .= '
@@ -232,13 +240,13 @@ class ProductsTableDevisVersion extends Base
 						<td style="width:75%;text-align:center;border:1px solid black;">
 							TOTAL TTC
 						</td>
-						<td style="width: 25%;text-align:center;border:1px solid black;">' . \CurrencyField::convertToUserFormat($ttc, null, true) . '</td>
+						<td style="width: 25%;text-align:center;border:1px solid black;">' . \CurrencyField::convertToUserFormat($totalTTC, null, true) . '</td>
 					</tr>
 				</table>
 			</div>';
 			$type = $this->textParser->recordModel->get('type') === 'Devis' ? 'DEVIS' : 'BORDEREAU DES PRIX';
-			$currency = \Vtiger_Util_Helper::is_decimal($ttc) ? '' : ' DIRHAMS';
-			$html .= '<div style="font-size:9px;margin-top:20px;"><b>ARRÊTÉ LE PRÉSENT ' . $type . ' À LA SOMME DE :</b><br /><b>' . \Vtiger_Util_Helper::int2str($ttc) . $currency . ' TTC</b></div>';
+			$currency = \Vtiger_Util_Helper::is_decimal($totalTTC) ? '' : ' DIRHAMS';
+			$html .= '<div style="font-size:9px;margin-top:20px;"><b>ARRÊTÉ LE PRÉSENT ' . $type . ' À LA SOMME DE :</b><br /><b>' . \Vtiger_Util_Helper::int2str($totalTTC) . $currency . ' TTC</b></div>';
 			if ($this->textParser->recordModel->get('validite') != '') {
 				$html .= '<div style="font-size:8px;margin-top:10px;"><b>Validité de l\'offre : ' . $this->textParser->recordModel->get('validite') . '</b></div>';
 			}

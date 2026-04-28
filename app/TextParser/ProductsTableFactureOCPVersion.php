@@ -183,13 +183,15 @@ class ProductsTableFactureOCPVersion extends Base
             }
             $html .= '</tr></tfoot></table>';
 
-            $totalHT = $ht - $discount;
+            $recordDiscount = (float)($this->textParser->recordModel->get('discount') ?? 0);
+            $remise = $discount + $recordDiscount;
+            $totalHT = $ht - $remise;
             $receptionDefinitivePercentage = intval($this->textParser->recordModel->get('reception_definitive'));
             $receptionProvisoirePercentage = intval($this->textParser->recordModel->get('reception_provisoire'));
             $receptionDefinitive = $totalHT * $receptionDefinitivePercentage / 100;
             $receptionProvisoire = $totalHT * $receptionProvisoirePercentage / 100;
             $totalHT = $totalHT - $receptionDefinitive - $receptionProvisoire;
-            $totalTVA = ($receptionDefinitive > 0 || $receptionProvisoire > 0) ? $totalHT * 0.2 : $tax;
+            $totalTVA = ($receptionDefinitive > 0 || $receptionProvisoire > 0 || $remise > 0) ? $totalHT * 0.2 : $tax;
             $totalTTC = round($totalHT + $totalTVA, 2);
 
             $html .= '
@@ -201,13 +203,13 @@ class ProductsTableFactureOCPVersion extends Base
 						</td>
 						<td style="width: 25%;text-align:center;border:1px solid black;">' . \CurrencyField::convertToUserFormat($ht, null, true) . '</td>
 					</tr>';
-            if ($discount > 0) {
+            if ($remise > 0) {
                 $html .= '
                 <tr>
                     <td style="width:75%;text-align:center;border:1px solid black;">
                         REMISE
                     </td>
-                    <td style="width: 25%;text-align:center;border:1px solid black;">' . \CurrencyField::convertToUserFormat($discount, null, true) . '</td>
+                    <td style="width: 25%;text-align:center;border:1px solid black;">' . \CurrencyField::convertToUserFormat($remise, null, true) . '</td>
                 </tr>';
             }
             if ($receptionProvisoire > 0) {

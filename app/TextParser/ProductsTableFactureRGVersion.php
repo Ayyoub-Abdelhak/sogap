@@ -172,7 +172,9 @@ class ProductsTableFactureRGVersion extends Base
             }
             $html .= '</tr></tfoot></table>';
 
-            $totalHT = $ht - $discount;
+            $recordDiscount = (float)($this->textParser->recordModel->get('discount') ?? 0);
+            $remise = $discount + $recordDiscount;
+            $totalHT = $ht - $remise;
             $rgValue = intval($this->textParser->recordModel->get('retenue_garantie'));
             $retenueGarantiePercentage = $rgValue === 0 ? 10 : $rgValue;
             $retenueGarantie = $totalHT * $retenueGarantiePercentage / 100;
@@ -189,13 +191,13 @@ class ProductsTableFactureRGVersion extends Base
 						</td>
 						<td style="width: 25%;text-align:center;border:1px solid black;">' . \CurrencyField::convertToUserFormat($ht, null, true) . '</td>
 					</tr>';
-            if ($discount > 0) {
+            if ($remise > 0) {
                 $html .= '
                 <tr>
                     <td style="width:75%;text-align:center;border:1px solid black;">
                         Remise
                     </td>
-                    <td style="width: 25%;text-align:center;border:1px solid black;">' . \CurrencyField::convertToUserFormat($discount, null, true) . '</td>
+                    <td style="width: 25%;text-align:center;border:1px solid black;">' . \CurrencyField::convertToUserFormat($remise, null, true) . '</td>
                 </tr>';
             }
             if ($retenueGarantie > 0) {
