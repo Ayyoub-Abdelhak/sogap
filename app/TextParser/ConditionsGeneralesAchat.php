@@ -37,8 +37,6 @@ class ConditionsGeneralesAchat extends Base
                 margin-bottom: 0px;
             }
             .cga-header-table td {
-                border: 1px solid #000;
-                border-bottom: none;
                 padding: 5px;
                 vertical-align: middle;
             }
@@ -48,6 +46,13 @@ class ConditionsGeneralesAchat extends Base
                 border-right-color: #000000;
                 border-right-style: solid;
                 border-right-width: 1px;
+                border-left-color: #000000;
+                border-left-style: solid;
+                border-left-width: 1px;
+                border-top-color: #000000;
+                border-top-style: solid;
+                border-top-width: 1px;
+                padding: 10px;
             }
             .cga-header-title {
                 width: 60%;
@@ -57,11 +62,26 @@ class ConditionsGeneralesAchat extends Base
                 border-right-color: #000000;
                 border-right-style: solid;
                 border-right-width: 1px;
+                border-left-color: #000000;
+                border-left-style: solid;
+                border-left-width: 1px;
+                border-top-color: #000000;
+                border-top-style: solid;
+                border-top-width: 1px;
             }
             .cga-header-ref {
                 width: 20%;
                 font-size: 9px;
                 text-align: center;
+                border-right-color: #000000;
+                border-right-style: solid;
+                border-right-width: 1px;
+                border-left-color: #000000;
+                border-left-style: solid;
+                border-left-width: 1px;
+                border-top-color: #000000;
+                border-top-style: solid;
+                border-top-width: 1px;
             }
             .cga-content-table {
                 width: 100%;
