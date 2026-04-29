@@ -315,7 +315,7 @@ class Vtiger_DetailView_Model extends \App\Base
 				$linkModelList['DETAIL_VIEW_BASIC'][] = Vtiger_Link_Model::getInstanceFromValues([
 					'linktype' => 'DETAIL_VIEW_BASIC',
 					'linklabel' => \App\Language::translate('LBL_EXPORT_PDF'),
-					'dataUrl' => 'index.php?module=' . $moduleName . '&view=PDF&fromview=Detail&record=' . $recordId,
+					'dataUrl' => 'index.php?module=' . $moduleName . '&view=PreviewPDF&fromview=Detail&record=' . $recordId,
 					'linkicon' => 'fas fa-file-pdf',
 					'linkclass' => 'btn-outline-dark btn-sm showModal js-pdf' . $additionalClass,
 					'title' => \App\Language::translate('LBL_EXPORT_PDF'),

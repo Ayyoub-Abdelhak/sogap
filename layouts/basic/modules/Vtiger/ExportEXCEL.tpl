@@ -57,7 +57,7 @@
 							<span class="secondaryName ml-2">[ {\App\Language::translate($TEMPLATE->get('secondary_name'), $MODULE_NAME)} ]</span>
 						</label>
 						<div class="col-sm-1">
-							<input type="{$SELECT_MODE}" id="pdfTpl{$TEMPLATE->getId()}" name="pdf_template[]" class="checkbox" value="{$TEMPLATE->getId()}"
+							<input type="radio" id="pdfTpl{$TEMPLATE->getId()}" name="pdf_template[]" class="checkbox" value="{$TEMPLATE->getId()}"
 								{if $TEMPLATE->get('default') eq 1}checked="checked" {/if} />
 						</div>
 						{TEMPLATE_USER_VARIABLE}
@@ -73,7 +73,7 @@
 								<span class="secondaryName ml-2">[ {\App\Language::translate($TEMPLATE->get('secondary_name'), $MODULE_NAME)} ]</span>
 							</label>
 							<div class="col-sm-1">
-								<input type="{$SELECT_MODE}" id="pdfTpl{$TEMPLATE->getId()}" name="pdf_template[]" class="checkbox dynamic-template" data-dynamic="1" value="{$TEMPLATE->getId()}" {if $TEMPLATE->get('default') eq 1}checked="checked" {/if} data-js="change" />
+								<input type="radio" id="pdfTpl{$TEMPLATE->getId()}" name="pdf_template[]" class="checkbox dynamic-template" data-dynamic="1" value="{$TEMPLATE->getId()}" {if $TEMPLATE->get('default') eq 1}checked="checked" {/if} data-js="change" />
 							</div>
 							{TEMPLATE_USER_VARIABLE}
 						</div>

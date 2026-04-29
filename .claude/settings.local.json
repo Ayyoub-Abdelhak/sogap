@@ -19,7 +19,8 @@
       "Bash(brew --version)",
       "Bash(brew install *)",
       "Bash(php *)",
-      "Bash(echo \"exit: $?\")"
+      "Bash(echo \"exit: $?\")",
+      "Bash(/Applications/MAMP/Library/bin/mysql80/bin/mysqldump *)"
     ],
     "deny": [],
     "ask": []

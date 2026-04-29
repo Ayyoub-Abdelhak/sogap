@@ -30,6 +30,15 @@ class Vtiger_EXCEL_View extends Vtiger_BasicModal_View
 	}
 
 	/** {@inheritdoc} */
+	public function getModalScripts(App\Request $request)
+	{
+		return $this->checkAndConvertJsScripts([
+			'modules.Vtiger.resources.PDF',
+			'modules.' . $request->getModule() . '.resources.PDF',
+		]);
+	}
+
+	/** {@inheritdoc} */
 	public function process(App\Request $request)
 	{
 		$this->preProcess($request);
