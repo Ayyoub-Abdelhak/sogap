@@ -26,7 +26,9 @@ class ConditionsGeneralesAchat extends Base
      */
     public function process()
     {
-        $html = '<style>
+        // Empty data-watermark resets the document watermark to nothing for all
+        // pages from this point on (YetiForcePDF Page::setUpAbsoluteBoxes logic).
+        $html = '<div data-watermark></div><style>
             .cga-header-table {
                 width: 100%;
                 border: 1px solid #000;
@@ -38,18 +40,28 @@ class ConditionsGeneralesAchat extends Base
                 border: 1px solid #000;
                 border-bottom: none;
                 padding: 5px;
-                text-align: center;
                 vertical-align: middle;
             }
+            .cga-header-logo {
+                width: 20%;
+                text-align: center;
+                border-right-color: #000000;
+                border-right-style: solid;
+                border-right-width: 1px;
+            }
             .cga-header-title {
-                width: 80%;
+                width: 60%;
                 font-size: 16px;
                 font-weight: bold;
+                text-align: center;
+                border-right-color: #000000;
+                border-right-style: solid;
+                border-right-width: 1px;
             }
             .cga-header-ref {
                 width: 20%;
                 font-size: 9px;
-                border-left: 1px solid #000;
+                text-align: center;
             }
             .cga-content-table {
                 width: 100%;
@@ -62,12 +74,13 @@ class ConditionsGeneralesAchat extends Base
                 border-top: none;
                 padding: 10px;
                 vertical-align: top;
-                font-size: 7px;
-                line-height: 1.3;
+                font-size: 8px;
+                line-height: 1.4;
+                text-align: justify;
             }
             .cga-section-title {
                 font-weight: bold;
-                font-size: 8px;
+                font-size: 10px;
                 margin-top: 8px;
                 margin-bottom: 3px;
             }
@@ -82,9 +95,12 @@ class ConditionsGeneralesAchat extends Base
             }
         </style>';
 
-        // HEADER
+        $html .= '<div style="page-break-after:always;">';
+
+        // HEADER PAGE 1
         $html .= '<table class="cga-header-table">';
         $html .= '<tr>';
+        $html .= '<td class="cga-header-logo"><img src="storage/logo.png" alt="SOGAP" style="max-height:28px;max-width:100%;"></td>';
         $html .= '<td class="cga-header-title">CONDITIONS GÉNÉRALES D\'ACHAT</td>';
         $html .= '<td class="cga-header-ref"><strong>CGA-Ind00</strong><br>Date: 20-10-2025</td>';
         $html .= '</tr>';
@@ -93,14 +109,14 @@ class ConditionsGeneralesAchat extends Base
         // PAGE 1 - TWO COLUMNS
         $html .= '<table class="cga-content-table">';
         $html .= '<tr>';
-        
+
         // LEFT COLUMN - PAGE 1
         $html .= '<td class="cga-column">';
-        
+
         // Section 1
         $html .= '<div class="cga-section-title">1. Objet et champ d\'application</div>';
         $html .= '<div class="cga-section-content">';
-        $html .= 'Les présentes conditions régissent l\'achat de matières premières, matériels industriels, EPI et autres achats destinés à être utilisées lors d\'une prestation de service réalisée par la société SOGAP';
+        $html .= 'Les présentes conditions régissent l\'achat de matières premières, matériels industriels, EPI et autres achats destinés à être utilisées lors d\'une prestation de service réalisée par la société SOGAP.';
         $html .= '</div>';
 
         // Section 2
@@ -129,23 +145,17 @@ class ConditionsGeneralesAchat extends Base
         $html .= 'Le fournisseur doit garantir que les produits respectent les spécifications qualité définies par l\'entreprise. Tout écart par rapport à ces spécifications doit être communiqué et validé avant livraison. Le fournisseur garantit la conformité des produits livrés pendant une période de 6 mois à compter de la date de réception des produits. Si des défauts ou non-conformités sont détectés dans ce délai, le fournisseur s\'engage à prendre en charge les réparations ou les remplacements nécessaires.';
         $html .= '</div>';
 
+        // Section 5
+        $html .= '<div class="cga-section-title">5. Gestion des risques environnementaux</div>';
+        $html .= '<div class="cga-section-content">';
+        $html .= 'Le fournisseur doit fournir des informations sur l\'impact environnemental des matières premières (empreinte carbone, émissions de gaz à effet de serre, risques de pollution).';
+        $html .= '</div>';
+
         $html .= '</td>';
-        
+
         // RIGHT COLUMN - PAGE 1
         $html .= '<td class="cga-column">';
-        
-        // Section 5
-        $html .= '<div class="cga-section-title">5. Gestion des risques environnementaux</div>';
-        $html .= '<div class="cga-section-content">';
-        $html .= 'Le fournisseur doit fournir des informations sur l\'impact environnemental des matières premières (empreinte carbone, émissions de gaz à effet de serre, risques de pollution).';
-        $html .= '</div>';
-        
-        // Section 5
-        $html .= '<div class="cga-section-title">5. Gestion des risques environnementaux</div>';
-        $html .= '<div class="cga-section-content">';
-        $html .= 'Le fournisseur doit fournir des informations sur l\'impact environnemental des matières premières (empreinte carbone, émissions de gaz à effet de serre, risques de pollution).';
-        $html .= '</div>';
-        
+
         // Section 6
         $html .= '<div class="cga-section-title">6. Formation et sensibilisation</div>';
         $html .= '<div class="cga-section-content">';
@@ -164,23 +174,33 @@ class ConditionsGeneralesAchat extends Base
         $html .= 'Dans le cadre de l\'amélioration continue de la gestion HSE, l\'entreprise procédera à une évaluation annuelle des fournisseurs, couvrant les aspects suivants : (voir fiche d\'évaluation en annexe)';
         $html .= '<div class="cga-list">';
         $html .= '• Respect des normes HSE : Qualité des matières premières et ou produits, matériels fourni(e)s et conformité<br>';
-        $html .= '• Performances achat (compétitivité, modalités de paiement, organisation interne,.,)<br>';
+        $html .= '• Performances achat (compétitivité, modalités de paiement, organisation interne,…)<br>';
         $html .= '• Logistique (respect des délais de livraison, rupture,…)<br>';
         $html .= '• Développement : (innovation produit, amélioration des compétences)';
         $html .= '</div>';
         $html .= 'Les résultats de cette évaluation seront partagés avec le fournisseur en cas de performance insuffisante. Un plan d\'action correctif sera défini et devra être mis en œuvre sous un délai déterminé. Le non-respect de ce plan pourra entraîner la résiliation du contrat d\'achat.';
         $html .= '</div>';
 
+        // Section 9 header + 9.1
+        $html .= '<div class="cga-section-title">9. Respect des livraisons et des conformités des produits</div>';
+        $html .= '<div class="cga-section-title" style="margin-left: 10px;">9.1. Respect des délais de livraison</div>';
+        $html .= '<div class="cga-section-content">';
+        $html .= 'Le fournisseur s\'engage à respecter strictement les délais de livraison convenus. Tout retard dans la livraison devra être communiqué à l\'entreprise au moins 1 jour avant la date prévue, avec une explication détaillée des raisons du retard. En cas de retard non justifié, l\'entreprise se réserve le droit de :';
+        $html .= '<div class="cga-list">';
+        $html .= '• Appliquer des pénalités de retard,<br>';
+        $html .= '• Réaliser une annulation partielle ou totale de la commande sans préjudice.';
+        $html .= '</div></div>';
+
         $html .= '</td>';
         $html .= '</tr>';
         $html .= '</table>';
 
-        // PAGE BREAK
-        $html .= '<div style="page-break-after:always;"></div>';
+        $html .= '</div>';
 
         // HEADER PAGE 2
         $html .= '<table class="cga-header-table">';
         $html .= '<tr>';
+        $html .= '<td class="cga-header-logo"><img src="storage/logo.png" alt="SOGAP" style="max-height:28px;max-width:100%;"></td>';
         $html .= '<td class="cga-header-title">CONDITIONS GÉNÉRALES D\'ACHAT</td>';
         $html .= '<td class="cga-header-ref"><strong>CGA-Ind00</strong><br>Date: 20-10-2025</td>';
         $html .= '</tr>';
@@ -189,20 +209,10 @@ class ConditionsGeneralesAchat extends Base
         // PAGE 2 - TWO COLUMNS
         $html .= '<table class="cga-content-table">';
         $html .= '<tr>';
-        
+
         // LEFT COLUMN - PAGE 2
         $html .= '<td class="cga-column">';
-        
-        // Section 9
-        $html .= '<div class="cga-section-title">9. Respect des livraisons et des conformités des produits</div>';
-        $html .= '<div class="cga-section-title" style="margin-left: 10px;">9.1 Respect des délais de livraison</div>';
-        $html .= '<div class="cga-section-content">';
-        $html .= 'Le fournisseur s\'engage à respecter strictement les délais de livraison convenus. Tout retard dans la livraison devra être communiqué à l\'entreprise au moins 1 jour avant la date prévue, avec une explication détaillée des raisons du retard. En cas de retard non justifié, l\'entreprise se réserve le droit de :';
-        $html .= '<div class="cga-list">';
-        $html .= '• Appliquer des pénalités de retard,<br>';
-        $html .= '• Réaliser une annulation partielle ou totale de la commande sans préjudice';
-        $html .= '</div></div>';
-        
+
         // Section 9.2
         $html .= '<div class="cga-section-title" style="margin-left: 10px;">9.2. Conformité des produits</div>';
         $html .= '<div class="cga-section-content">';
@@ -234,17 +244,17 @@ class ConditionsGeneralesAchat extends Base
         $html .= 'Les frais associés au remplacement des produits (transport, gestion des retours, tests supplémentaires, etc.) seront à la charge du fournisseur.';
         $html .= '</div>';
 
-        $html .= '</td>';
-        
-        // RIGHT COLUMN - PAGE 2
-        $html .= '<td class="cga-column">';
-
         // Section 10
         $html .= '<div class="cga-section-title">10. Documentation et traçabilité</div>';
         $html .= '<div class="cga-section-content">';
         $html .= 'Le fournisseur doit garantir la traçabilité des produits, depuis leur origine jusqu\'à leur livraison. Toutes les étapes de production, de transport et de stockage doivent être documentées et disponibles pour contrôle en cas de besoin.';
         $html .= '</div>';
-        
+
+        $html .= '</td>';
+
+        // RIGHT COLUMN - PAGE 2
+        $html .= '<td class="cga-column">';
+
         // Section 11
         $html .= '<div class="cga-section-title">11. Durabilité et responsabilité sociétale</div>';
         $html .= '<div class="cga-section-content">';
