@@ -1,12 +1,6 @@
-﻿{*<!--
+{*<!--
 /*********************************************************************************
-** The contents of this file are subject to the vtiger CRM Public License Version 1.0
-* ("License"); You may not use this file except in compliance with the License
-* The Original Code is:  vtiger CRM Open Source
-* The Initial Developer of the Original Code is vtiger.
-* Portions created by vtiger are Copyright (C) vtiger.
-* All Rights Reserved.
-* Contributor(s): YetiForce S.A.
+** Custom ListViewContents for ISTDN — shows related inventory products inline
 ********************************************************************************/
 -->*}
 {strip}
@@ -55,24 +49,9 @@
 									class="fas {if $ORDER_BY[$LISTVIEW_HEADER_NAME] eq \App\Db::DESC}fa-chevron-down{else}fa-chevron-up{/if}"></span>
 							{/if}
 						</span>
-						{if $LISTVIEW_HEADER->getFieldDataType() eq 'tree' || $LISTVIEW_HEADER->getFieldDataType() eq 'categoryMultipicklist'}
-							{assign var=LISTVIEW_HEADER_NAME value=$LISTVIEW_HEADER->getName()}
-							<div class="d-flex align-items-center">
-								<input name="searchInSubcategories" value="1" type="checkbox" class="searchInSubcategories mr-1 ml-1"
-									id="searchInSubcategories{$LISTVIEW_HEADER_NAME}"
-									title="{\App\Language::translate('LBL_SEARCH_IN_SUBCATEGORIES',$MODULE_NAME)}"
-									data-columnname="{$LISTVIEW_HEADER->getColumnName()}"
-									{if !empty($SEARCH_DETAILS[$LISTVIEW_HEADER_NAME]['specialOption'])} checked {/if}>
-								<span class="js-popover-tooltip delay0" data-js="popover" data-placement="top"
-									data-original-title="{\App\Language::translate($LISTVIEW_HEADER->getFieldLabel(), $MODULE)}"
-									data-content="{\App\Language::translate('LBL_SEARCH_IN_SUBCATEGORIES',$MODULE_NAME)}">
-									<span class="fas fa-info-circle"></span>
-								</span>
-							</div>
-						{/if}
 					</th>
-					{if $LISTVIEW_HEADER->getFieldDataType() eq 'string' && $LISTVIEW_HEADER->isNameField()}
-						<th class="noWrap p-2 u-table-column__before-block">Dépôts/Chantiers</th>
+					{if $LISTVIEW_HEADER->getFieldDataType() eq 'recordNumber'}
+						<th class="noWrap p-2 u-table-column__before-block">Matériels</th>
 					{/if}
 				{/foreach}
 				<th class="reducePadding"></th>
@@ -101,10 +80,8 @@
 							{/if}
 							{include file=\App\Layout::getTemplatePath($FIELD_UI_TYPE_MODEL->getListSearchTemplateName(), $MODULE_NAME) FIELD_MODEL=$LISTVIEW_HEADER SEARCH_INFO=$SEARCH_INFO USER_MODEL=$USER_MODEL}
 						</td>
-
-						{if $LISTVIEW_HEADER->getFieldDataType() eq 'string' && $LISTVIEW_HEADER->isNameField()}
-							<td class="pl-1">
-							</td>
+						{if $LISTVIEW_HEADER->getFieldDataType() eq 'recordNumber'}
+							<td class="pl-1"></td>
 						{/if}
 					{/foreach}
 					<td class="reducePadding"></td>
@@ -135,12 +112,11 @@
 								{$LISTVIEW_ENTRY->getListViewDisplayValue($LISTVIEW_HEADER)}
 							{/if}
 						</td>
-
-						{if $LISTVIEW_HEADER->isNameField() && $LISTVIEW_HEADER->getFieldDataType() eq 'string'}
+						{if $LISTVIEW_HEADER->getFieldDataType() eq 'recordNumber'}
 							<td class="listViewEntryValue noWrap">
-								{foreach from=$LISTVIEW_ENTRY->getRelatedStorages() item=storage}
-									<b>{$storage['subject']} </b>
-									<span style="color: rgb(1, 155, 70);"><b>({$storage['qtyinstock']|string_format:"%.3f"|regex_replace:"/0+$/":""|regex_replace:"/\.$/":""})</b></span><br>
+								{foreach from=$LISTVIEW_ENTRY->getRelatedInventoryProducts() item=product}
+									<b>{$product['productname']}</b>
+									<span style="color: rgb(1, 155, 70);"><b>({$product['qty']|string_format:"%.3f"|regex_replace:"/0+$/":""|regex_replace:"/\.$/":""})</b></span><br>
 								{/foreach}
 							</td>
 						{/if}
