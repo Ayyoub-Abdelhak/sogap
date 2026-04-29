@@ -42,7 +42,9 @@ class Vtiger_ExportRecords_View extends \App\Controller\Modal
 		$moduleName = $request->getModule();
 		$this->moduleModel = Vtiger_Module_Model::getInstance($moduleName);
 		$viewer = $this->getViewer($request);
-		$viewer->assign('EXPORT_TYPE', \App\Export\Records::getSupportedFileFormats($moduleName));
+		$formats = \App\Export\Records::getSupportedFileFormats($moduleName);
+		$formats = ['LBL_XLS' => 'xls'] + array_filter($formats, fn($v) => $v !== 'xls');
+		$viewer->assign('EXPORT_TYPE', $formats);
 		$viewer->assign('RECORD_STRUCTURE_RELATED_MODULES', $this->getRecordStructureModuleFields());
 		$viewer->assign('RECORD_STRUCTURE', Vtiger_RecordStructure_Model::getInstanceForModule($this->moduleModel)->getStructure());
 		$viewer->assign('MODULE_NAME', $moduleName);
