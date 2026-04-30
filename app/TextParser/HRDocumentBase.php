@@ -29,9 +29,20 @@ class HRDocumentBase extends Base
     {
         return (new \App\Db\Query())
             ->select([
-                'name', 'last_name', 'cnss_num', 'cin_num', 'date_embauche',
-                'poste', 'position', 'sortie', 'salaire_moyen', 'salaire_lettres',
-                'banquee', 'agence_bancaire', 'rrib_num', 'gender',
+                'name',
+                'last_name',
+                'cnss_num',
+                'cin_num',
+                'date_embauche',
+                'poste',
+                'position',
+                'sortie',
+                'salaire_moyen',
+                'salaire_lettres',
+                'banquee',
+                'agence_bancaire',
+                'rrib_num',
+                'gender',
             ])
             ->from('vtiger_ossemployees')
             ->where(['ossemployeesid' => $employeeId])
@@ -54,12 +65,21 @@ class HRDocumentBase extends Base
             return '';
         }
         $months = [
-            1 => 'Janvier', 2 => 'Février', 3 => 'Mars', 4 => 'Avril',
-            5 => 'Mai', 6 => 'Juin', 7 => 'Juillet', 8 => 'Août',
-            9 => 'Septembre', 10 => 'Octobre', 11 => 'Novembre', 12 => 'Décembre',
+            1 => 'Janvier',
+            2 => 'Février',
+            3 => 'Mars',
+            4 => 'Avril',
+            5 => 'Mai',
+            6 => 'Juin',
+            7 => 'Juillet',
+            8 => 'Août',
+            9 => 'Septembre',
+            10 => 'Octobre',
+            11 => 'Novembre',
+            12 => 'Décembre',
         ];
         $d = new \DateTime($dateStr);
-        return (int)$d->format('j') . ' ' . $months[(int)$d->format('n')] . ' ' . $d->format('Y');
+        return (int) $d->format('j') . ' ' . $months[(int) $d->format('n')] . ' ' . $d->format('Y');
     }
 
     /** Today's date in French long format. */
@@ -98,8 +118,9 @@ class HRDocumentBase extends Base
      */
     protected function getLetterhead(): string
     {
+        return "";
         $style = 'font-family: Arial, sans-serif; font-size: 10pt; color: #222; line-height: 1.6;';
-        $html  = '<div style="' . $style . '">';
+        $html = '<div style="' . $style . '">';
         $html .= '<table style="width:100%; border-collapse:collapse; margin-bottom:40px;">';
         $html .= '<tr>';
         $html .= '<td style="vertical-align:top; width:55%;">';
@@ -119,12 +140,17 @@ class HRDocumentBase extends Base
      */
     protected function getSignature(): string
     {
-        $html  = '<br><br>';
-        $html .= '<table style="width:100%; border-collapse:collapse;">';
+        $html = '<br><br>';
+        $html .= '<table style="width:100%; border-collapse:collapse; margin-top:30px;">';
         $html .= '<tr>';
-        $html .= '<td style="width:55%;">&nbsp;</td>';
-        $html .= '<td style="width:45%; text-align:right;">';
-        $html .= 'Fait à Casablanca, le ' . $this->todayFr() . '<br><br><br>';
+        $html .= '<td style="width:75%;">';
+        $html .= 'Fait à Casablanca, le ' . $this->todayFr();
+        $html .= '</td>';
+        $html .= '<td style="width:25%;">&nbsp;</td>';
+        $html .= '</tr>';
+        $html .= '<tr style="padding-top:20px;">';
+        $html .= '<td style="width:25%;">&nbsp;</td>';
+        $html .= '<td style="width:75%; text-align:left;">';
         $html .= '<strong>Direction des Ressources Humaines</strong>';
         $html .= '</td>';
         $html .= '</tr>';
